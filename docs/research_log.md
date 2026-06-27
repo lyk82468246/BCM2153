@@ -50,3 +50,16 @@ local reports remain ignored.
 
 Added the first durable fact store, boot-chain hypothesis page, and initial
 survey summary.
+
+## 2026-06-27 Ghidra bootstrap
+
+Added a reproducible Ghidra headless import path for `amss.bin` and
+`bcmboot.img`.
+
+Validated imports:
+
+- `amss.bin`: raw ARM little-endian, base `0x80300000`, file offset `0x0`.
+- `bcmboot.img`: raw ARM little-endian, base `0x28000000`, file offset `0x40`.
+
+Installed WSL helper packages `bubblewrap` and `binutils-arm-none-eabi` so the
+Codex sandbox and quick ARM objdump checks work directly inside WSL.

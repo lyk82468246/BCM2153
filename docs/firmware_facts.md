@@ -62,6 +62,14 @@ include likely RAM/runtime addresses such as `0x803001fc`, `0x803000d8`,
 `0xbabeface` marker at offset `0x60`, followed by words including
 `0x00000b50`, `0x28000070`, and `0x2800066c`.
 
+When loaded from file offset `0x40` at base `0x28000000`, `bcmboot.img` reset
+code sets `sp` to `0x08700800`, uses `0x08400000` as the next-stage RAM image
+base, checks for `0xbabeface` at `0x08400020`, and jumps with `bx 0x08400000`.
+
+`boot2.img` file offset `0x20` is not `0xbabeface` in the local sample. This is
+evidence that raw `boot2.img` bytes are transformed or represented differently
+before `bcmboot.img` performs the RAM header check.
+
 ## Debug/service clues
 
 `amss.bin` contains format strings for ARM memory reads:

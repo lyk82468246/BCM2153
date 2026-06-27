@@ -30,6 +30,18 @@ python3 tools/firmware_survey.py /home/joe/thing --out out/deep_survey --deep-al
 - `/opt/ghidra_12.1_PUBLIC`
 - `/opt/.ZS-ISP-Client`
 - `/usr/bin/binwalk`
+- `/usr/bin/bwrap`
+- `/usr/bin/arm-none-eabi-objdump`
 
-Command-line ARM objdump/radare2 were not present during the initial survey.
-Ghidra should be used first for disassembly and decompilation.
+Ghidra should be used first for decompilation. `arm-none-eabi-objdump` is useful
+for quick raw-binary disassembly checks.
+
+## Ghidra import
+
+```sh
+cd /home/joe/BCM2153
+tools/ghidra_import.sh
+```
+
+See `docs/ghidra_import.md` for base-address hypotheses, loader offsets, and
+the post-import annotation script.

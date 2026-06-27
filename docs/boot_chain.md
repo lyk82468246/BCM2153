@@ -5,7 +5,7 @@
 ```mermaid
 flowchart TD
     ROM["Boot ROM / mask ROM"] --> B1["bcmboot.img"]
-    B1 -->|load ok| B2["boot2.img"]
+    B1 -->|decode/load to 0x08400000| B2["boot2.img"]
     B1 -->|load fail| DL["download mode"]
     B2 --> AMSS["amss.bin / Nucleus + baseband stack"]
     B2 --> APPS["apps_compressed.bin / feature-phone app side"]
@@ -29,6 +29,22 @@ flowchart TD
 `bcmboot.img` has ARM vector-like code at offset `0x40`, not at file offset
 zero. This suggests an image header or table precedes executable ARM code.
 
+With `bcmboot.img` imported from file offset `0x40` to base `0x28000000`:
+
+- reset vector target: `0x28000070`;
+- common exception-vector target: `0x2800066c`;
+- initial stack setup computes `sp = 0x08700800`;
+- boot2 copy/decode destination starts at `0x08400000`;
+- before jumping, code checks `*(uint32_t *)(0x08400000 + 0x20) == 0xbabeface`;
+- success path ends with `bx 0x08400000` at `0x280003a8`;
+- failure path near `0x28000338` writes status values then loops forever at
+  `0x28000350`.
+
+`boot2.img` file offset `0x20` is not `0xbabeface` in the local sample, so
+`bcmboot.img` is probably not jumping to the raw file bytes directly. The boot2
+file is likely decoded, decrypted, decompressed, or loaded from a different NAND
+representation before the RAM header check passes.
+
 ## Next questions
 
 1. What fields are stored before `bcmboot.img` offset `0x40`?
@@ -36,4 +52,4 @@ zero. This suggests an image header or table precedes executable ARM code.
    simple size/header check?
 3. What transfer protocol is used by download mode?
 4. Does download mode allow RAM execution, or only flash programming?
-5. What exact address is used when jumping from `bcmboot.img` to `boot2.img`?
+5. Which routine transforms `boot2.img` into the RAM image at `0x08400000`?
