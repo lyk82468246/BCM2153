@@ -1,0 +1,52 @@
+# Research log
+
+## 2026-06-27 initial state
+
+The working sample directory is `/home/joe/thing` in WSL. It contains a Samsung
+GT-B5310/B5310U-style firmware package with boot, modem, app, resource, DSP,
+filesystem, parameter, and NVRAM-like components.
+
+Observed private sample components:
+
+- `bcmboot.img`
+- `boot2.img`
+- `amss.bin`
+- `apps_compressed.bin`
+- `drom_dsp.img`
+- `patch_dsp.img`
+- `FactoryFs_B5310_China.ffs`
+- `PFS_B5310_Open_China_Common.pfs`
+- `Rsrc_B5310_China.rc1`
+- `Rsrc2_B5310U(Low).rc2`
+- `Rsrc2_B5310U(Mid).rc2`
+- `ShpApp.app`
+- `sysparm_dep.img`
+- `sysparm_ind.img`
+- `NVRAM6.bin`
+
+Important early observations:
+
+- `amss.bin` begins with an ARM little-endian exception vector table.
+- `amss.bin` contains BCM2153, Hedge, Nucleus PLUS, CAPI2, RF calibration, and
+  Samsung model/version strings.
+- `bcmboot.img` contains NAND boot strings and transitions to `boot2.img` or
+  download mode on failure.
+- `boot2.img` and the beginning of `apps_compressed.bin` look high-entropy and
+  need format/compression/encryption checks before static loading.
+
+Near-term milestones:
+
+1. Generate a reproducible firmware survey report.
+2. Infer image load addresses and boot-chain handoff points.
+3. Create Ghidra import notes for `bcmboot.img` and `amss.bin`.
+4. Identify UART/download-mode memory read/write or RAM execution primitives.
+5. Build a RAM-only hello-world payload path before considering flash changes.
+
+## 2026-06-27 repository setup
+
+Created public-safe project scaffolding in `/home/joe/BCM2153`. The repository
+contains scripts and manually filtered notes only; raw firmware and generated
+local reports remain ignored.
+
+Added the first durable fact store, boot-chain hypothesis page, and initial
+survey summary.

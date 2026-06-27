@@ -1,0 +1,41 @@
+__pycache__/
+*.pyc
+
+# Raw firmware, calibration data, filesystem images, and vendor binaries.
+# Keep these local unless the copyright/ownership situation is explicitly clear.
+firmware/
+samples/
+raw/
+dump/
+dumps/
+*.bin
+*.img
+*.ffs
+*.pfs
+*.rc1
+*.rc2
+*.app
+*.pac
+*.tar
+*.zip
+*.7z
+*.rar
+
+# Reverse-engineering workspaces can contain large proprietary-derived data.
+*.gpr
+*.rep
+*.gzf
+ghidra_projects/
+ida_projects/
+radare2_projects/
+
+# Local generated outputs. Selected sanitized reports may be committed under docs/.
+out/
+reports/local/
+analysis/local/
+
+# OS/editor noise.
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
