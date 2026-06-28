@@ -45,6 +45,10 @@ Known sample files and SHA-256 hashes:
 
 `apps_compressed.bin` and `boot2.img` both contain `TkToolVer:1.6.1` strings.
 
+`bcmboot.img`, `boot2.img`, `amss.bin`, and `apps_compressed.bin` all contain a
+last `cd ab cd ab` trailer marker exactly 1024 bytes before the end of the file.
+See `docs/tktool_tail.md`.
+
 ## Image structure observations
 
 `amss.bin` begins with an ARM little-endian vector table. The first eight words
@@ -62,13 +66,23 @@ include likely RAM/runtime addresses such as `0x803001fc`, `0x803000d8`,
 `0xbabeface` marker at offset `0x60`, followed by words including
 `0x00000b50`, `0x28000070`, and `0x2800066c`.
 
-When loaded from file offset `0x40` at base `0x28000000`, `bcmboot.img` reset
-code sets `sp` to `0x08700800`, uses `0x08400000` as the next-stage RAM image
-base, checks for `0xbabeface` at `0x08400020`, and jumps with `bx 0x08400000`.
+When loaded from file offset `0x40` at base `0x28000000`, `bcmboot.img` has
+entry-like code at `0x28000030` that sets `sp` to `0x08700800`, uses
+`0x08400000` as the next-stage RAM image base, checks for `0xbabeface` at
+`0x08400020`, and jumps with `bx 0x08400000`.
+
+The apparent reset-vector target word in `bcmboot.img` is `0x28000070`, but that
+address falls inside the early string-output loop. Treat the first words as
+vector-like header evidence, not as a confirmed CPU reset vector table.
 
 `boot2.img` file offset `0x20` is not `0xbabeface` in the local sample. This is
 evidence that raw `boot2.img` bytes are transformed or represented differently
 before `bcmboot.img` performs the RAM header check.
+
+`boot2.img` exposes a low-entropy metadata/module-name area starting around
+offset `0x0004c000`. Selected visible module identifiers include `MID_PTT`,
+`MID_SYSTEM`, `MID_SETTING`, and call/media-related modules. The final TkTool
+trailer marker is at `0x0004d296`.
 
 ## Debug/service clues
 

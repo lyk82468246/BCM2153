@@ -18,6 +18,12 @@ cd /home/joe/BCM2153
 python3 tools/firmware_survey.py /home/joe/thing --out out/initial_survey
 ```
 
+TkTool/Samsung trailer survey:
+
+```sh
+python3 tools/tktool_tail_survey.py /home/joe/thing --out out/tktool_tail_survey
+```
+
 The default scan mode deeply scans boot/core images and shallow-scans large
 resource/filesystem images. To force expensive scans on every image:
 

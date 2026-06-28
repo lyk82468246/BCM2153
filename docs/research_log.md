@@ -63,3 +63,15 @@ Validated imports:
 
 Installed WSL helper packages `bubblewrap` and `binutils-arm-none-eabi` so the
 Codex sandbox and quick ARM objdump checks work directly inside WSL.
+
+## 2026-06-28 TkTool trailer survey
+
+Added `tools/tktool_tail_survey.py` to locate short Samsung/TkTool trailer
+markers without copying firmware bytes.
+
+High-confidence observation: `bcmboot.img`, `boot2.img`, `amss.bin`, and
+`apps_compressed.bin` all have a final `cd ab cd ab` marker exactly 1024 bytes
+before EOF. This makes the final KiB a likely packaging/tooling metadata block.
+
+`boot2.img` also has a visible `MID_*` module-name table before its final
+trailer, starting around `0x0004c000`.

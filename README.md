@@ -36,7 +36,9 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `tools/ghidra_import.sh`: local-only Ghidra project builder for key images.
 - `docs/firmware_facts.md`: durable facts and offsets.
 - `docs/boot_chain.md`: boot-chain hypotheses and evidence.
+- `docs/bcmboot_analysis.md`: first-stage loader disassembly notes.
 - `docs/ghidra_import.md`: reproducible Ghidra headless import workflow.
+- `docs/tktool_tail.md`: Samsung/TkTool trailer observations.
 - `docs/analysis/initial_survey.md`: manually filtered survey summary.
 - `docs/research_log.md`: running research notes and milestones.
 - `docs/publication_policy.md`: what is safe to publish here.

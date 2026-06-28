@@ -26,6 +26,7 @@ public class AnnotateBcm2153 extends GhidraScript {
 
         annotateVectorTable(toAddr(base), imageName);
         annotateBabeface(toAddr(base + 0x20), imageName);
+        annotateKnownImageDetails(imageName, base);
     }
 
     private long parseLongArg(int index, long fallback) {
@@ -56,9 +57,48 @@ public class AnnotateBcm2153 extends GhidraScript {
             }
             String name = imageName + "_handler_" + VECTOR_NAMES[i];
             symbols.createLabel(target, name, SourceType.USER_DEFINED);
-            addEntryPoint(target);
+            if (!imageName.startsWith("bcmboot")) {
+                addEntryPoint(target);
+            }
             disassemble(target);
         }
+    }
+
+    private void annotateKnownImageDetails(String imageName, long base) throws Exception {
+        if (imageName.startsWith("bcmboot")) {
+            labelAndBookmark(base + 0x30, "bcmboot_entry_like_start",
+                "Entry-like setup path; sets SP before early calls");
+            labelAndBookmark(base + 0x3ac, "bcmboot_copy_0x40_bytes_helper",
+                "Copies 0x40 bytes through 0x0c0ca000/0x0c0ca008 MMIO path");
+            labelAndBookmark(base + 0x40c, "bcmboot_nand_width_test",
+                "Checks 0x08880008 bit 0x02000000; controls 8-bit vs 16-bit data reads");
+            labelAndBookmark(base + 0x598, "bcmboot_debug_putc_delay",
+                "Byte output helper using 0x08821000 plus delay");
+            labelAndBookmark(base + 0x5e8, "bcmboot_debug_getc_poll",
+                "Byte input poll helper using 0x08820000");
+            labelAndBookmark(base + 0x83c, "bcmboot_flash_controller_init",
+                "Initializes controller register block at 0x0c0c9000");
+            labelAndBookmark(base + 0x8b8, "bcmboot_flash_controller_command",
+                "Issues controller command/address sequence through 0x0c0c9000");
+            labelAndBookmark(base + 0x960, "bcmboot_flash_controller_read_status",
+                "Reads controller status/data through 0x0c0c9000");
+            labelAndBookmark(base + 0x9c4, "bcmboot_flash_probe_or_fixup",
+                "Uses table at 0x28007800 and flash controller helpers");
+            labelAndBookmark(0x08400000L, "boot2_runtime_base_candidate",
+                "Next-stage RAM image base checked and jumped to by bcmboot");
+            labelAndBookmark(0x08700800L, "bcmboot_initial_stack_top",
+                "Stack top computed by bcmboot entry-like setup");
+        }
+    }
+
+    private void labelAndBookmark(long rawAddress, String label, String note) throws Exception {
+        Address address = toAddr(rawAddress);
+        if (!currentProgram.getMemory().contains(address)) {
+            return;
+        }
+        currentProgram.getSymbolTable().createLabel(address, label, SourceType.USER_DEFINED);
+        createBookmark(address, "BCM2153", note);
+        disassemble(address);
     }
 
     private List<Address> vectorTargets(Address vectorBase) throws Exception {

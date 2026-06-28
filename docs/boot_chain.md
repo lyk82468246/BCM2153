@@ -31,8 +31,11 @@ zero. This suggests an image header or table precedes executable ARM code.
 
 With `bcmboot.img` imported from file offset `0x40` to base `0x28000000`:
 
-- reset vector target: `0x28000070`;
-- common exception-vector target: `0x2800066c`;
+- the first eight words look vector-like, but the apparent reset target
+  `0x28000070` lands inside a string-output loop and is probably not the true
+  cold-start entry;
+- entry-like initialization code starts at `0x28000030` and sets up the stack;
+- the common exception-vector target word is `0x2800066c`;
 - initial stack setup computes `sp = 0x08700800`;
 - boot2 copy/decode destination starts at `0x08400000`;
 - before jumping, code checks `*(uint32_t *)(0x08400000 + 0x20) == 0xbabeface`;
@@ -53,3 +56,5 @@ representation before the RAM header check passes.
 3. What transfer protocol is used by download mode?
 4. Does download mode allow RAM execution, or only flash programming?
 5. Which routine transforms `boot2.img` into the RAM image at `0x08400000`?
+6. Is the `0x28000000` vector-like area used by the CPU exception model, or is
+   it mainly a Broadcom image header with vector-shaped stubs?
