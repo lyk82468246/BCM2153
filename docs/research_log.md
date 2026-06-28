@@ -138,3 +138,11 @@ slow mixed code/resource analysis and a decompiler warning. The workflow now
 defaults to `-noanalysis`; manual or targeted analysis should start from the
 Thumb entry region around `0x0e00ad0c`.
 
+## 2026-06-28 ShpApp entry probe pass
+
+Added `tools/shpapp_entry_probe.py` for metadata-only entry-region analysis.
+The probe maps the ShpApp entry `0x0e00ad0c` to container offset `0xc63a`,
+confirms the entry should be treated as Thumb, and records that the first block
+stores the incoming context in a ZI global around `0x0e5e8c0c` before calling
+through host-provided function pointers.
+

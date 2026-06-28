@@ -9,6 +9,14 @@ Generated locally with:
 python3 tools/shpapp_elf_survey.py /home/joe/thing/ShpApp.app --out out/shpapp_elf_survey
 ```
 
+The entry region can be probed without opening Ghidra:
+
+```sh
+python3 tools/shpapp_entry_probe.py \
+  /home/joe/thing/ShpApp.app \
+  --out out/shpapp_entry_probe
+```
+
 The generated `out/` files are local-only. This page keeps the public-safe
 summary.
 
@@ -63,6 +71,36 @@ and argument save sequence:
 The nearby code uses `blx` through pointers loaded from object/function tables,
 which suggests the payload is entered by a Samsung/SHP host runtime and calls
 back into host services.
+
+## Entry Probe Findings
+
+`tools/shpapp_entry_probe.py` maps the ELF entry `0x0e00ad0c` to ELF offset
+`0xad0c` and `ShpApp.app` container offset `0xc63a`. A small window before the
+entry contains data/text bytes, so automatic linear analysis should not be
+trusted without seeding the real Thumb entry.
+
+The entry block is strongly Thumb-only. Forced ARM decoding produces mostly
+undefined or implausible instructions, while forced Thumb decoding gives a normal
+prologue and host-callback sequence.
+
+Important entry literals and effects:
+
+- `0x0e00ad10` loads `0x0e5e8c0c`, which falls in `ZI+0x42a8`; the entry stores
+  incoming `r0` and `r1` there. Treat this as an early global runtime-context
+  slot.
+- `0x0e00ad1c` loads `0x0e3bbc00`, an `ER_RO` string/log literal near the text
+  "Webkit's DllBaseInit called".
+- After an internal call at `0x0e311eec`, the entry walks through the incoming
+  object and calls a function pointer reached through offset `0x24`, passing
+  selector-like value `0xb8`, the `ER_RO` literal pointer, and the original
+  context pointer.
+- The nearby routine at `0x0e00ad30` reuses the saved globals and calls further
+  host/runtime function pointers at offsets that include `0x3c`, `0x20`, and a
+  pointer after adding `0xc0`.
+
+This supports the current model that `ShpApp.app` is loaded by a host Samsung/SHP
+runtime and receives a service table or context object, rather than running as a
+standalone firmware image.
 
 ## Interpretation
 
