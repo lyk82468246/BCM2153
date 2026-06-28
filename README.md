@@ -33,6 +33,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 ## Layout
 
 - `tools/firmware_survey.py`: read-only scanner for firmware files.
+- `tools/factoryfs_survey.py`: metadata-only survey for the FactoryFs FAT16 image.
 - `tools/imrc_probe.py`: metadata-only probe for IMRC/resource-bank structure.
 - `tools/ghidra_import.sh`: local-only Ghidra project builder for key images.
 - `tools/shpapp_ghidra_import.sh`: local-only Ghidra importer for the ShpApp embedded ELF.
@@ -43,6 +44,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `docs/bcmboot_analysis.md`: first-stage loader disassembly notes.
 - `docs/shpapp_analysis.md`: Samsung ShpApp/FimBIN native ELF notes.
 - `docs/resource_layer.md`: IMRC/ShpApp/FactoryFs resource observations.
+- `docs/factoryfs_analysis.md`: FAT16 FactoryFs directory and extension map.
 - `docs/ghidra_import.md`: reproducible Ghidra headless import workflow.
 - `docs/tktool_tail.md`: Samsung/TkTool trailer observations.
 - `docs/analysis/initial_survey.md`: manually filtered survey summary.

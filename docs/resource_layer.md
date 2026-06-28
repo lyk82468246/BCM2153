@@ -93,7 +93,8 @@ files. Magic counts include:
 | `SWF_CWS` | 3 |
 
 The high ZIP count is consistent with preinstalled J2ME `.jar` files and widget
-packages in the FAT filesystem.
+packages in the FAT filesystem. See `docs/factoryfs_analysis.md` for the FAT16
+directory and extension map.
 
 ## Rsrc2 profile banks
 

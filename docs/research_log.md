@@ -146,3 +146,11 @@ confirms the entry should be treated as Thumb, and records that the first block
 stores the incoming context in a ZI global around `0x0e5e8c0c` before calling
 through host-provided function pointers.
 
+## 2026-06-28 FactoryFs survey pass
+
+Added `tools/factoryfs_survey.py` and `docs/factoryfs_analysis.md` for a
+metadata-only FAT16 filesystem map. The FactoryFs image has 608 visible entries,
+with `SystemFS` as the dominant tree, 10 preinstalled `.jad`/`.jar` J2ME pairs,
+3 widget `.wgt` packages, certificate-heavy `Security`, and hardware-support
+files under `SystemFS/Driver`.
+

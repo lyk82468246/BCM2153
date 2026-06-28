@@ -100,31 +100,25 @@ format is still unknown.
 
 ## Filesystem layer
 
-`FactoryFs_B5310_China.ffs` is FAT16. Root directories observed with `fls`:
+`FactoryFs_B5310_China.ffs` is FAT16. `tools/factoryfs_survey.py` records
+608 visible entries: 325 directories and 283 files. Top-level visible roots are
+`Debug`, `DicDB`, `Exe`, `Media`, `Mount`, `Security`, `Settings`, `SystemFS`,
+and a root-level `@samsung.ess` file.
 
-- `Debug`
-- `DicDB`
-- `Exe`
-- `Media`
-- `Mount`
-- `Security`
-- `Settings`
-- `SystemFS`
+The largest tree is `SystemFS` with 272 directories and 191 files. `Exe` contains
+`Java` and `Mocha`; the Java tree has 10 `.jad` files and 10 `.jar` files across
+5 normal game directories and 5 locked-game directories. `SystemFS/MediaSet` has
+widget/media packages, including 3 `.wgt` files under `SystemFS/MediaSet/Widget`.
 
-`Exe` contains `Java` and `Mocha`. The `Java` subtree includes preinstalled J2ME
-games and apps with `.jad` / `.jar` files. The `SystemFS` subtree includes:
+`SystemFS/Driver` contains 11 hardware-support files: 6 `.bin`, 4 `.dls`, and
+1 `.xml`. Observed names include camera firmware-like `CE143_*`, sound-bank-like
+`Mobile_*_base.dls`, `volpreset.xml`, and Broadcom WLAN firmware-like
+`Wlan_bcm_*` files.
 
-- `Country`
-- `DB`
-- `Driver`
-- `Media`
-- `MediaSet`
-- `Settings`
-- `Test`
-- `User`
-
-`SystemFS/Driver` contains device/media support blobs such as camera firmware,
-sound bank files, volume presets, and Broadcom WLAN firmware names.
+`Security` is certificate-heavy, with 29 `.der` and 16 `.cer` files in the first
+metadata pass. `SystemFS/User` is the largest mutable-looking application data
+area and includes browser, IMS, widget, multistage, Java, Mocha, and media/config
+subtrees.
 
 ## Parameter and calibration layer
 
