@@ -30,6 +30,12 @@ Source-path architecture survey:
 python3 tools/source_path_survey.py /home/joe/thing/source_files.txt --out out/source_path_survey
 ```
 
+ShpApp/FimBIN embedded ELF survey:
+
+```sh
+python3 tools/shpapp_elf_survey.py /home/joe/thing/ShpApp.app --out out/shpapp_elf_survey
+```
+
 The default scan mode deeply scans boot/core images and shallow-scans large
 resource/filesystem images. To force expensive scans on every image:
 

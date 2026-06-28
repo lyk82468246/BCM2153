@@ -92,3 +92,12 @@ Important new observations:
   Samsung SHP/Web/widget-related source-path strings.
 - `Rsrc_B5310_China.rc1` starts with `IMRC` and contains XML, PNG, zlib, bitmap,
   and other UI/media resources.
+
+## 2026-06-28 ShpApp ELF pass
+
+Added `tools/shpapp_elf_survey.py` and `docs/shpapp_analysis.md`.
+
+Confirmed that `ShpApp.app` is a `FimBIN` container with an embedded ARM ELF at
+offset `0x192e`. The ELF entry is `0x0e00ad0c`, the LOAD segment starts at VMA
+`0x0e000034`, and sections use ARM toolchain-style names `ER_RO`, `ER_RW`, and
+`ZI`.

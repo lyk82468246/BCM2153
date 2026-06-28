@@ -49,7 +49,10 @@ Known sample files and SHA-256 hashes:
 
 `ShpApp.app` contains an embedded 32-bit ARM ELF at file offset `0x0000192e`.
 The ELF header reports machine `0x28` (ARM), one program header, and six section
-headers.
+headers. Its entry point is `0x0e00ad0c`; the single LOAD segment maps file
+offset `0x34` to VMA `0x0e000034` with file size `0x5e4930` and memory size
+`0x5fe188`. Section names include `ER_RO`, `ER_RW`, and `ZI`. The entry code at
+`0x0e00ad0c` disassembles as Thumb.
 
 `Rsrc_B5310_China.rc1` starts with `IMRC` and contains XML, PNG/zlib, GIF,
 JPEG/BMP, and other resource-like data according to `binwalk` and string scans.

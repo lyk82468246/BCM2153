@@ -64,8 +64,13 @@ ARM ELF at file offset `0x192e`:
 
 - ELF class: 32-bit;
 - machine: ARM (`0x28`);
+- entry: `0x0e00ad0c`;
+- LOAD segment VMA: `0x0e000034`;
 - program headers: 1;
-- section headers: 6.
+- section headers: 6;
+- section names include `ER_RO`, `ER_RW`, and `ZI`;
+- entry code disassembles as Thumb and calls host/runtime services through
+  pointer tables.
 
 Strings in `ShpApp.app` reference Samsung SHP code paths and a Web/widget stack,
 including examples such as:
