@@ -101,3 +101,13 @@ Confirmed that `ShpApp.app` is a `FimBIN` container with an embedded ARM ELF at
 offset `0x192e`. The ELF entry is `0x0e00ad0c`, the LOAD segment starts at VMA
 `0x0e000034`, and sections use ARM toolchain-style names `ER_RO`, `ER_RW`, and
 `ZI`.
+
+## 2026-06-28 resource layer pass
+
+Added `tools/resource_magic_survey.py` and `docs/resource_layer.md`.
+
+`Rsrc_B5310_China.rc1` is confirmed as a dense IMRC resource bank with PNG,
+JPEG/JFIF, XML/BWFXML, ZIP, SWF, and zlib-like resources. `ShpApp.app` also
+contains a small embedded resource set in addition to the native ELF. FactoryFs
+shows many ZIP/JAR/widget-like resources, consistent with FAT16-hosted Java and
+widget packages.

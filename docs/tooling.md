@@ -36,6 +36,16 @@ ShpApp/FimBIN embedded ELF survey:
 python3 tools/shpapp_elf_survey.py /home/joe/thing/ShpApp.app --out out/shpapp_elf_survey
 ```
 
+Resource/container magic survey:
+
+```sh
+python3 tools/resource_magic_survey.py \
+  /home/joe/thing/Rsrc_B5310_China.rc1 \
+  /home/joe/thing/ShpApp.app \
+  /home/joe/thing/FactoryFs_B5310_China.ffs \
+  --out out/resource_magic_survey
+```
+
 The default scan mode deeply scans boot/core images and shallow-scans large
 resource/filesystem images. To force expensive scans on every image:
 

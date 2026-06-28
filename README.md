@@ -39,6 +39,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `docs/boot_chain.md`: boot-chain hypotheses and evidence.
 - `docs/bcmboot_analysis.md`: first-stage loader disassembly notes.
 - `docs/shpapp_analysis.md`: Samsung ShpApp/FimBIN native ELF notes.
+- `docs/resource_layer.md`: IMRC/ShpApp/FactoryFs resource observations.
 - `docs/ghidra_import.md`: reproducible Ghidra headless import workflow.
 - `docs/tktool_tail.md`: Samsung/TkTool trailer observations.
 - `docs/analysis/initial_survey.md`: manually filtered survey summary.

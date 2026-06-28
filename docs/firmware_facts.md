@@ -55,7 +55,10 @@ offset `0x34` to VMA `0x0e000034` with file size `0x5e4930` and memory size
 `0x0e00ad0c` disassembles as Thumb.
 
 `Rsrc_B5310_China.rc1` starts with `IMRC` and contains XML, PNG/zlib, GIF,
-JPEG/BMP, and other resource-like data according to `binwalk` and string scans.
+JPEG/BMP, ZIP, SWF-like, and other resource-like data according to `binwalk`,
+magic scans, and string scans. A first-pass magic survey found 137 PNG headers,
+122 JFIF headers, 16 XML headers, 27 `BWFXML` markers, 3 ZIP local headers, and
+dozens of SWF markers.
 
 `apps_compressed.bin` and `boot2.img` both contain `TkToolVer:1.6.1` strings.
 

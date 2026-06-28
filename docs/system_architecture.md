@@ -89,8 +89,10 @@ binary.
 ## Resource layer
 
 `Rsrc_B5310_China.rc1` starts with `IMRC`. It contains many detected XML, PNG,
-zlib, GIF, JPEG, BMP, and SWF-like resources. Visible strings include `Idle`,
-Samsung certificate/company strings, `BWFXML`, and many XML headers.
+zlib, GIF, JPEG, BMP, ZIP, and SWF-like resources. First-pass magic counts
+include 137 PNG headers, 122 JFIF headers, 16 XML headers, 27 `BWFXML` markers,
+and dozens of SWF markers. Visible strings include `Idle`, `WidgetTray`,
+`BluetoothIcon`, `GamesIcon`, `Menu`, and `Main`.
 
 `Rsrc2_B5310U(Low).rc2` and `Rsrc2_B5310U(Mid).rc2` are likely related resource
 variants, possibly display/profile/resource-quality variants. Their exact table
