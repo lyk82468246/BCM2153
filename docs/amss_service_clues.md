@@ -1,0 +1,114 @@
+# AMSS service and debug clues
+
+This page tracks short, public-safe string evidence for possible AMSS service,
+AT/USB, CAPI2, filesystem, calibration, trace, and debug interfaces. It does not
+claim that any interface is externally reachable yet; each item still needs code
+cross-reference work in Ghidra.
+
+Generated locally with:
+
+```sh
+python3 tools/amss_service_survey.py \
+  /home/joe/thing/amss.bin \
+  --out out/amss_service_survey
+```
+
+The report assumes the current AMSS base hypothesis `0x80300000`, so VMA equals
+file offset plus `0x80300000`.
+
+## Survey summary
+
+`tools/amss_service_survey.py` scanned 71,819 printable strings and found 485
+categorized hits.
+
+| Category | Hits | Meaning |
+| --- | ---: | --- |
+| `memory_debug` | 5 | ARM memory read/write format/help strings |
+| `usb_at_test` | 37 | USB AT test command handler strings |
+| `usb_acm` | 46 | USB CDC/ACM adapter strings |
+| `capi2_at_ipc` | 8 | CAPI2 AT/IPC queues and entry points |
+| `capi2_ffs` | 5 | CAPI2 filesystem-control request/response strings |
+| `download_diag` | 25 | download-mode and DIAG-like request strings |
+| `trace_logging` | 213 | trace/logging subsystem strings, mostly not direct service entry points |
+| `calibration_nv` | 148 | calibration, sysparm, NVRAM, and RF/PMU ACK strings |
+
+## Highest-value clues
+
+### ARM memory debug strings
+
+| Offset | VMA | Text |
+| ---: | ---: | --- |
+| `0x18840` | `0x80318840` | `ARM memory *(int32 *)0x%0lx = 0x%0lx` |
+| `0x18868` | `0x80318868` | `ARM memory *(char *)0x%0lx = 0x%0x` |
+| `0x18890` | `0x80318890` | `ARM memory *(int16 *)0x%0lx = 0x%0x` |
+| `0x188b8` | `0x803188b8` | `First parameter should be 1, 2 or 3, then address` |
+| `0x18928` | `0x80318928` | `First parameter should be 1, 2 or 3, then address, value` |
+
+Interpretation: these strongly suggest an internal command handler for typed ARM
+memory access. The missing piece is the command name and ingress path. Trace the
+string references in Ghidra before assuming it is exposed over AT, USB, UART, or
+calibration mode.
+
+### USB AT test and USB ACM
+
+The USB test cluster includes `ATCmd_MUSBTST_Handler` / `ATCmd_MUSBTEST_Handler`
+strings near offsets `0x2310` through `0x2af8`. Selected visible cases include
+USB VID/PID get/set handling, a calibration-mode test case, and switching ATC to
+UART A.
+
+The USB ACM layer has `JusbAdapter_acm_*` strings around offsets `0x155e4` and
+later, including read/write, DTR/DCD, open-device, and calibration-waiting
+messages. This is likely one path that carries AT or diagnostic data over USB.
+
+### CAPI2 AT and filesystem control
+
+CAPI2 AT/IPC strings include:
+
+| Offset | VMA | Text |
+| ---: | ---: | --- |
+| `0x597c` | `0x8030597c` | `CAPI2AT_Q` |
+| `0x5a54` | `0x80305a54` | `CP2ATC_Q` |
+| `0xb4a4` | `0x8030b4a4` | `CAPI2_SYS_ClientInit atChannel=%d` |
+| `0xbde0` | `0x8030bde0` | `CAPI2_atc_entry: MSG_ATC_DATA` |
+
+Filesystem-control strings include:
+
+| Offset | VMA | Text |
+| ---: | ---: | --- |
+| `0x11ca4` | `0x80311ca4` | `CAPI2_FFS_Control enter cmd=%d, address=0x%x, offset=%d` |
+| `0x11ce0` | `0x80311ce0` | `CAPI2_FFS_Control ack FAIL %d` |
+| `0x11d00` | `0x80311d00` | `CAPI2_FFS_Control exit` |
+| `0x555f4` | `0x803555f4` | `CAPI2_FFS_Control_RSP_Rsp_t` |
+| `0x55658` | `0x80355658` | `CAPI2_FFS_Control_Req_t` |
+
+Interpretation: CAPI2 appears to bridge AT/client-side messages and CP services.
+`CAPI2_FFS_Control` may be relevant to filesystem or flash-file operations, but
+its command IDs and caller path still need code tracing.
+
+### Download, DIAG, trace, and calibration
+
+`download_diag` contains strings such as `Please download script file`,
+`mode :0=normal,1=cal,2=download`, and several `CAPI2_DIAG_*` request/response
+type names. `trace_logging` is much larger and mostly represents general logging
+infrastructure such as `src\sdltrace.c`, so it should not be confused with a
+confirmed diagnostic ingress path.
+
+Calibration/NV strings are dense around the same early AMSS region as the memory
+and USB clues. Visible ACK strings include battery voltage calibration, Bluetooth
+address, checksum write, TX dynamic calibration, calibration date, and flash-like
+ACK messages. Treat these as high-risk device-specific paths until their storage
+and access control are understood.
+
+## Working model
+
+The most promising interaction chain to trace is:
+
+```text
+USB ACM / UART AT transport -> AT command handler -> CAPI2 AT/IPC -> CP service
+```
+
+The memory access strings may sit inside a calibration/test command family rather
+than a normal user-facing AT command. The next reverse-engineering step is to use
+Ghidra references from the strings at `0x80318840`-`0x80318928` and from
+`ATCmd_MUSBTST_Handler` strings to identify the dispatch table, command name,
+and parameter parser.

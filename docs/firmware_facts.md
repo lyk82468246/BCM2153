@@ -103,14 +103,18 @@ trailer marker is at `0x0004d296`.
 
 ## Debug/service clues
 
-`amss.bin` contains format strings for ARM memory reads:
+`amss.bin` contains format/help strings for ARM memory access near file offsets
+`0x18840`-`0x18928`:
 
 - `ARM memory *(int32 *)0x%0lx = 0x%0lx`
 - `ARM memory *(char *)0x%0lx = 0x%0x`
 - `ARM memory *(int16 *)0x%0lx = 0x%0x`
+- `First parameter should be 1, 2 or 3, then address`
+- `First parameter should be 1, 2 or 3, then address, value`
 
-These strings should be traced to identify service commands that may provide a
-memory read/write or calibration/debug interface.
+`tools/amss_service_survey.py` also finds USB AT test strings, USB ACM adapter
+strings, CAPI2 AT/IPC queues, `CAPI2_FFS_Control`, download/DIAG strings, trace
+logging strings, and calibration/NV ACK strings. See `docs/amss_service_clues.md`.
 
 ## Hypotheses
 

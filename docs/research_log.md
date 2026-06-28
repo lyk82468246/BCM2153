@@ -154,3 +154,11 @@ with `SystemFS` as the dominant tree, 10 preinstalled `.jad`/`.jar` J2ME pairs,
 3 widget `.wgt` packages, certificate-heavy `Security`, and hardware-support
 files under `SystemFS/Driver`.
 
+## 2026-06-28 AMSS service clue pass
+
+Added `tools/amss_service_survey.py` and `docs/amss_service_clues.md` for a
+metadata-only survey of AMSS AT/USB/CAPI2/debug strings. Highest-value clues are
+ARM memory access format/help strings near `0x18840`-`0x18928`, USB AT test
+handler strings near `0x2310`-`0x2af8`, USB ACM transport strings,
+`CAPI2AT_Q`/`CP2ATC_Q`, and `CAPI2_FFS_Control` request/response names.
+

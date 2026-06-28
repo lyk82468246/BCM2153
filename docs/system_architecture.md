@@ -57,6 +57,12 @@ Important implication: this is not a simple Linux/Android application processor
 firmware. The primary low-level software stack is a baseband-oriented Nucleus
 system with telephony protocols, services, and Samsung integration layers.
 
+Service-interface clues in `amss.bin` include USB AT test handlers, USB ACM
+transport strings, CAPI2 AT/IPC queues, CAPI2 filesystem-control request names,
+download/DIAG strings, calibration/NV ACK strings, and ARM memory access format
+strings. These are currently string-level clues, not confirmed reachable
+interfaces. See `docs/amss_service_clues.md`.
+
 ## Application and UI layer
 
 `ShpApp.app` begins with a UTF-16-like `FimBIN` marker and contains an embedded
