@@ -111,3 +111,19 @@ JPEG/JFIF, XML/BWFXML, ZIP, SWF, and zlib-like resources. `ShpApp.app` also
 contains a small embedded resource set in addition to the native ELF. FactoryFs
 shows many ZIP/JAR/widget-like resources, consistent with FAT16-hosted Java and
 widget packages.
+
+## 2026-06-28 IMRC probe pass
+
+Added `tools/imrc_probe.py` to test resource-bank structure without extracting
+assets.
+
+New model: `Rsrc_B5310_China.rc1` starts with an `IMRC` header whose declared
+`0x1000` header/table area is not a direct absolute offset/length table. Strict
+resource span parsing shows that magic scans overcount real resource starts:
+115/137 PNG hits currently parse as complete PNG files, while SWF hits are also
+mixed between parseable and incidental matches.
+
+`Rsrc2_B5310U(Low).rc2` and `Rsrc2_B5310U(Mid).rc2` are not IMRC files. They are
+near-identical `CHN`-marked profile banks with a profile word difference at
+`0x08` and a short differing tail region.
+

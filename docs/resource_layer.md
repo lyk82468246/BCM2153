@@ -11,6 +11,10 @@ python3 tools/resource_magic_survey.py \
   /home/joe/thing/ShpApp.app \
   /home/joe/thing/FactoryFs_B5310_China.ffs \
   --out out/resource_magic_survey
+
+python3 tools/imrc_probe.py \
+  /home/joe/thing/Rsrc_B5310_China.rc1 \
+  --out out/imrc_probe
 ```
 
 ## Rsrc_B5310_China.rc1
@@ -34,6 +38,27 @@ python3 tools/resource_magic_survey.py \
 
 Visible UI/resource strings include `Idle`, `WidgetTray`, `WidgetMemo`,
 `BluetoothIcon`, `GamesIcon`, `WidgetSetting`, `Menu`, and `Main`.
+
+### IMRC probe findings
+
+`tools/imrc_probe.py` performs a stricter metadata-only pass over `IMRC` files.
+For `Rsrc_B5310_China.rc1`:
+
+- Header fields are `version_word=0x02000400`, `table_or_header_size=0x1000`,
+  `word_0x0c=0x0c`, `word_0x10=0x06`, and `word_0x14=0x04365bbc`.
+  `word_0x14` is larger than the file size, so it may be an unpacked, virtual,
+  or tool-side size rather than a direct file length.
+- The first `0x1000` bytes after the magic do not look like a direct absolute
+  offset/length table. Most words after `0x18` are small values, which is more
+  consistent with a compact index, size/Huffman-style table, or another encoded
+  structure.
+- Naive magic scans overcount real resource boundaries. Current strict parsing
+  finds 115 complete PNG spans out of 137 PNG magic hits, 7 complete `FWS` SWF
+  spans out of 17, and 18 complete `CWS` SWF spans out of 29.
+- JFIF, XML, and BWFXML strings are visible, but this pass does not yet bound
+  them as standalone resource records. Treat them as evidence of embedded
+  content, not as safe replacement boundaries.
+
 
 ## ShpApp.app resources
 
@@ -69,6 +94,15 @@ files. Magic counts include:
 
 The high ZIP count is consistent with preinstalled J2ME `.jar` files and widget
 packages in the FAT filesystem.
+
+## Rsrc2 profile banks
+
+`Rsrc2_B5310U(Low).rc2` and `Rsrc2_B5310U(Mid).rc2` are not `IMRC` containers.
+Both are `0x85128` bytes and begin mostly with zeroes; offset `0x10` contains
+`CHN\0`. The Mid variant has `u32le[0x08] == 1`, while Low has zero there. A
+byte comparison shows only that profile word and a short tail area near
+`0x84f70` differ in the first pass, suggesting low/mid profile selection data
+plus a checksum/signature-like trailer rather than a second full resource bank.
 
 ## Working model
 
