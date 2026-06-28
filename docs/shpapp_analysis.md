@@ -75,6 +75,17 @@ Strings inside the image reference Samsung SHP platform code, Web/widget/RSS/XML
 components, networking resource handlers, and UI manager classes. Treat this as
 one of the primary native UI/runtime targets.
 
+## Local Ghidra Workflow
+
+Use `tools/shpapp_ghidra_import.sh` to create a local-only Ghidra project from
+the embedded ELF. The helper extracts bytes from `ShpApp.app` offset `0x192e`
+into `out/ghidra_shpapp/work/ShpApp_embedded.elf` and imports that ELF into
+`out/ghidra_shpapp/projects/BCM2153_ShpApp.gpr`.
+
+The script defaults to `-noanalysis`. This preserves a fast, stable import while
+we decide how to seed the Thumb entry point and which memory ranges should be
+analyzed as code versus bundled resources.
+
 ## Next questions
 
 1. Is the embedded ELF loaded directly at `0x0e000000`, or relocated by the

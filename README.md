@@ -35,6 +35,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `tools/firmware_survey.py`: read-only scanner for firmware files.
 - `tools/imrc_probe.py`: metadata-only probe for IMRC/resource-bank structure.
 - `tools/ghidra_import.sh`: local-only Ghidra project builder for key images.
+- `tools/shpapp_ghidra_import.sh`: local-only Ghidra importer for the ShpApp embedded ELF.
 - `docs/firmware_facts.md`: durable facts and offsets.
 - `docs/system_architecture.md`: current firmware architecture map.
 - `docs/boot_chain.md`: boot-chain hypotheses and evidence.

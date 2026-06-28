@@ -127,3 +127,14 @@ mixed between parseable and incidental matches.
 near-identical `CHN`-marked profile banks with a profile word difference at
 `0x08` and a short differing tail region.
 
+## 2026-06-28 ShpApp Ghidra import pass
+
+Added `tools/shpapp_ghidra_import.sh` for a reproducible local-only import of
+the embedded ELF inside `ShpApp.app`. The script extracts from file offset
+`0x192e` into ignored `out/` storage and imports with Ghidra's ELF loader.
+
+A full automatic-analysis attempt was interrupted after several minutes due to
+slow mixed code/resource analysis and a decompiler warning. The workflow now
+defaults to `-noanalysis`; manual or targeted analysis should start from the
+Thumb entry region around `0x0e00ad0c`.
+

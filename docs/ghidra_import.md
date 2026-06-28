@@ -34,6 +34,35 @@ tools/ghidra_import.sh
 | `amss_80300000` | `amss.bin` | `0x0` | `0x80300000` | `0x58e2a4` | vector table starts at file offset zero; adjacent metadata points into `0x80300000` RAM |
 | `bcmboot_28000000_from_0x40` | `bcmboot.img` | `0x40` | `0x28000000` | `0xab26` | first `0x40` bytes look like a loader/header prefix; ARM vectors begin at file offset `0x40` |
 
+## ShpApp ELF Import
+
+`ShpApp.app` is a FimBIN container rather than a plain binary. Use the separate
+helper to cut the embedded ELF into ignored `out/` storage and import it with
+Ghidra's ELF loader:
+
+```sh
+tools/shpapp_ghidra_import.sh
+```
+
+Defaults:
+
+- Input: `/home/joe/thing/ShpApp.app`
+- Embedded ELF offset: `0x192e`
+- Output project root: `/home/joe/BCM2153/out/ghidra_shpapp`
+- Project name: `BCM2153_ShpApp`
+- Automatic analysis: disabled by default with `-noanalysis`
+
+Set `RUN_ANALYSIS=1` to allow Ghidra automatic analysis after import. A first
+full-analysis attempt was interrupted after several minutes because Ghidra was
+spending time in decompiler/data-type analysis over a mixed code/resource image
+and emitted a pcode/decompiler warning. The no-analysis import is the safer
+starting point for manual Thumb entry setup and targeted analysis.
+
+The ELF loader currently selects `ARM:LE:32:v8:default`. Treat this as a loader
+choice to verify, not proof that the BCM2153 application core is ARMv8; the
+entry bytes still disassemble as Thumb and the broader firmware evidence points
+to an older ARM/Thumb-era platform.
+
 ## Post-import annotation
 
 `tools/ghidra_scripts/AnnotateBcm2153.java` labels:
