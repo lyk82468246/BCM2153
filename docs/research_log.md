@@ -75,3 +75,20 @@ before EOF. This makes the final KiB a likely packaging/tooling metadata block.
 
 `boot2.img` also has a visible `MID_*` module-name table before its final
 trailer, starting around `0x0004c000`.
+
+## 2026-06-28 architecture pass
+
+Added a first architecture map covering the boot/packaging layer, Nucleus modem
+stack, Samsung SHP/native application layer, IMRC resources, FAT16 FactoryFs,
+and parameter/calibration images.
+
+Important new observations:
+
+- `FactoryFs_B5310_China.ffs` is FAT16 and contains `Exe`, `Media`, `Security`,
+  `Settings`, and `SystemFS` root directories.
+- `Exe/Java` contains preinstalled J2ME `.jad` / `.jar` applications; `Exe/Mocha`
+  is also present.
+- `ShpApp.app` contains an embedded ARM ELF at file offset `0x192e` and many
+  Samsung SHP/Web/widget-related source-path strings.
+- `Rsrc_B5310_China.rc1` starts with `IMRC` and contains XML, PNG, zlib, bitmap,
+  and other UI/media resources.

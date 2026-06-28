@@ -24,6 +24,12 @@ TkTool/Samsung trailer survey:
 python3 tools/tktool_tail_survey.py /home/joe/thing --out out/tktool_tail_survey
 ```
 
+Source-path architecture survey:
+
+```sh
+python3 tools/source_path_survey.py /home/joe/thing/source_files.txt --out out/source_path_survey
+```
+
 The default scan mode deeply scans boot/core images and shallow-scans large
 resource/filesystem images. To force expensive scans on every image:
 

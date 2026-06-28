@@ -43,6 +43,17 @@ Known sample files and SHA-256 hashes:
 `FactoryFs_B5310_China.ffs` contains model XML strings identifying
 `GT-B5310U` and base model `GT-B5310`.
 
+`FactoryFs_B5310_China.ffs` is a FAT16 image. Its root directory includes
+`Debug`, `DicDB`, `Exe`, `Media`, `Mount`, `Security`, `Settings`, and
+`SystemFS`.
+
+`ShpApp.app` contains an embedded 32-bit ARM ELF at file offset `0x0000192e`.
+The ELF header reports machine `0x28` (ARM), one program header, and six section
+headers.
+
+`Rsrc_B5310_China.rc1` starts with `IMRC` and contains XML, PNG/zlib, GIF,
+JPEG/BMP, and other resource-like data according to `binwalk` and string scans.
+
 `apps_compressed.bin` and `boot2.img` both contain `TkToolVer:1.6.1` strings.
 
 `bcmboot.img`, `boot2.img`, `amss.bin`, and `apps_compressed.bin` all contain a

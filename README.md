@@ -35,6 +35,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `tools/firmware_survey.py`: read-only scanner for firmware files.
 - `tools/ghidra_import.sh`: local-only Ghidra project builder for key images.
 - `docs/firmware_facts.md`: durable facts and offsets.
+- `docs/system_architecture.md`: current firmware architecture map.
 - `docs/boot_chain.md`: boot-chain hypotheses and evidence.
 - `docs/bcmboot_analysis.md`: first-stage loader disassembly notes.
 - `docs/ghidra_import.md`: reproducible Ghidra headless import workflow.
