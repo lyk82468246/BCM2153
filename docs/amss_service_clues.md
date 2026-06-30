@@ -99,6 +99,48 @@ address, checksum write, TX dynamic calibration, calibration date, and flash-lik
 ACK messages. Treat these as high-risk device-specific paths until their storage
 and access control are understood.
 
+## Reference Probes
+
+Two complementary probes now test whether the highest-value strings have direct
+references:
+
+```sh
+python3 tools/amss_string_xref_probe.py \
+  /home/joe/thing/amss.bin \
+  --out out/amss_string_xref_probe
+
+/opt/ghidra_12.1_PUBLIC/support/analyzeHeadless \
+  out/ghidra/projects BCM2153 \
+  -process amss.bin \
+  -noanalysis \
+  -scriptPath tools/ghidra_scripts \
+  -postScript FindAmssServiceStringRefs.java \
+    /home/joe/BCM2153/out/amss_service_refs/ghidra_string_refs.md
+```
+
+The raw xref probe searches little-endian 32-bit values for several candidate
+bases (`0x0`, `0x80000000`, `0x80300000`, `0x80400000`). It found no convincing
+direct references to the memory-debug or USB AT strings; the few raw-offset hits
+for `0x11d00` are likely too weak on their own.
+
+The Ghidra reference probe is more useful. In the current `amss.bin` project it
+reports:
+
+| Label | Target | Refs | First ref |
+| --- | ---: | ---: | --- |
+| `CAPI2AT_Q` | `0x8030597c` | 1 | `0x803058fc` in `FUN_80305888` |
+| `CP2ATC_Q` | `0x80305a54` | 1 | `0x803059fa` in `FUN_803059a4` |
+| `CAPI2_atc_entry` | `0x8030bde0` | 1 | `0x8030bd98` |
+| `CAPI2_FFS_Control_enter` | `0x80311ca4` | 1 | `0x80311c48` in `FUN_80311c34` |
+| `CAPI2_FFS_Control_fail` | `0x80311ce0` | 1 | `0x80311c8c` in `FUN_80311c34` |
+| `CAPI2_FFS_Control_exit` | `0x80311d00` | 1 | `0x80311c96` in `FUN_80311c34` |
+
+It still reports zero refs for the selected ARM memory-debug strings and the USB
+AT test strings. Treat this as a real negative result for the current Ghidra
+analysis state, not proof the strings are unreachable. The likely next causes to
+check are Thumb regions not yet disassembled, logging/string-table indirection,
+or handler tables that store offsets/IDs rather than absolute string pointers.
+
 ## Working model
 
 The most promising interaction chain to trace is:

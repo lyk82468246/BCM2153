@@ -34,9 +34,11 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 
 - `tools/firmware_survey.py`: read-only scanner for firmware files.
 - `tools/amss_service_survey.py`: metadata-only AMSS service/debug string survey.
+- `tools/amss_string_xref_probe.py`: raw multi-base xref probe for selected AMSS service strings.
 - `tools/factoryfs_survey.py`: metadata-only survey for the FactoryFs FAT16 image.
 - `tools/imrc_probe.py`: metadata-only probe for IMRC/resource-bank structure.
 - `tools/ghidra_import.sh`: local-only Ghidra project builder for key images.
+- `tools/ghidra_scripts/FindAmssServiceStringRefs.java`: Ghidra report for selected AMSS service-string refs.
 - `tools/shpapp_ghidra_import.sh`: local-only Ghidra importer for the ShpApp embedded ELF.
 - `tools/shpapp_entry_probe.py`: metadata and short disassembly probe for the ShpApp entry region.
 - `docs/firmware_facts.md`: durable facts and offsets.

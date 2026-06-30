@@ -162,3 +162,13 @@ ARM memory access format/help strings near `0x18840`-`0x18928`, USB AT test
 handler strings near `0x2310`-`0x2af8`, USB ACM transport strings,
 `CAPI2AT_Q`/`CP2ATC_Q`, and `CAPI2_FFS_Control` request/response names.
 
+## 2026-06-30 AMSS xref probe pass
+
+Added `tools/amss_string_xref_probe.py` and
+`tools/ghidra_scripts/FindAmssServiceStringRefs.java`. Raw multi-base 32-bit
+xref probing found no convincing direct references for the selected memory-debug
+or USB AT strings. Ghidra's reference manager did find CAPI2 references:
+`CAPI2AT_Q` from `FUN_80305888`, `CP2ATC_Q` from `FUN_803059a4`, and all three
+`CAPI2_FFS_Control` strings from `FUN_80311c34`. The memory-debug and USB AT
+strings still need Thumb/dispatch-table/string-table tracing.
+

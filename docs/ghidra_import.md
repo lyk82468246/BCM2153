@@ -88,6 +88,25 @@ analysis pass took about 202 seconds for `amss.bin` and about 6 seconds for
   `ldr pc, [pc, #32]`. The reset vector reads `0x28000070`; most other vectors
   read `0x2800066c`.
 
+## AMSS Service String Reference Report
+
+After importing `amss.bin`, this local-only report asks Ghidra for references to
+selected service/debug strings:
+
+```sh
+/opt/ghidra_12.1_PUBLIC/support/analyzeHeadless \
+  out/ghidra/projects BCM2153 \
+  -process amss.bin \
+  -noanalysis \
+  -scriptPath tools/ghidra_scripts \
+  -postScript FindAmssServiceStringRefs.java \
+    /home/joe/BCM2153/out/amss_service_refs/ghidra_string_refs.md
+```
+
+The first run found useful refs for CAPI2 AT queues and `CAPI2_FFS_Control`, but
+not for the selected memory-debug or USB AT test strings. That makes
+`FUN_80311c34` the current best CAPI2 filesystem-control candidate function.
+
 ## Current assumptions to revisit
 
 - `ARM:LE:32:v5t` is a practical starting point because the image contains both
