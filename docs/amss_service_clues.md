@@ -99,6 +99,42 @@ address, checksum write, TX dynamic calibration, calibration date, and flash-lik
 ACK messages. Treat these as high-risk device-specific paths until their storage
 and access control are understood.
 
+## AT Command Dispatch Table
+
+`tools/amss_at_table_probe.py` scans for 24-byte records whose command-name
+field points at visible AT command strings. It writes only metadata to ignored
+`out/` storage:
+
+```sh
+python3 tools/amss_at_table_probe.py \
+  /home/joe/thing/amss.bin \
+  --out out/amss_at_table_probe
+```
+
+The current run found 232 candidate AT command records. The command-name table
+uses the same AMSS base hypothesis, so `*MUSBTST` is stored at file offset
+`0x534f39`, VMA `0x80834f39`; its dispatch record is at file offset
+`0x43e9b4`. The handler pointer is odd, which marks a Thumb entry; the cleared
+entry address is `0x803023ac`.
+
+High-value test/debug records from the current probe:
+
+| Command | Record offset | Flags | Handler | Mode | Bucket |
+| --- | ---: | ---: | ---: | --- | --- |
+| `*MTEST` | `0x43e42c` | `0x30101` | `0x803d897c` | Thumb | main AT handler region |
+| `*APMTEST` | `0x43e444` | `0x230900` | `0x803d897c` | Thumb | main AT handler region |
+| `*MUSBTST` | `0x43e9b4` | `0x30100` | `0x803023ac` | Thumb | USB AT test handler region |
+| `*MTESTUSB` | `0x43e9cc` | `0x30401` | `0x803021c4` | Thumb | USB AT test handler region |
+| `*MAUDLOG` | `0x43e9fc` | `0x230600` | `0x803020a0` | Thumb | USB AT test handler region |
+| `*MDSPTST` | `0x43e9e4` | `0x30501` | `0x803d53e8` | Thumb | main AT handler region |
+| `*MADCTST` | `0x43ea14` | `0x30600` | `0x803d47fc` | Thumb | main AT handler region |
+| `+TEMPTEST` | `0x43ea74` | `0x230303` | `0x803d9b5c` | Thumb | main AT handler region |
+
+This upgrades the USB AT clue from "nearby strings exist" to “visible AT
+commands dispatch into concrete Thumb handlers.” The next Ghidra work should set
+Thumb context at `0x803021c4`, `0x803023ac`, and `0x803020a0`, then identify
+case dispatch and parameter parsing.
+
 ## Reference Probes
 
 Two complementary probes now test whether the highest-value strings have direct

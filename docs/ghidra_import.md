@@ -88,6 +88,21 @@ analysis pass took about 202 seconds for `amss.bin` and about 6 seconds for
   `ldr pc, [pc, #32]`. The reset vector reads `0x28000070`; most other vectors
   read `0x2800066c`.
 
+## AMSS AT Handler Entry Points
+
+`tools/amss_at_table_probe.py` identifies AT dispatch-table records from raw
+metadata. The strongest USB-test entries are Thumb handlers:
+
+| Command | Handler entry | Record offset |
+| --- | ---: | ---: |
+| `*MTESTUSB` | `0x803021c4` | `0x43e9cc` |
+| `*MAUDLOG` | `0x803020a0` | `0x43e9fc` |
+| `*MUSBTST` | `0x803023ac` | `0x43e9b4` |
+
+When opening these in Ghidra, set the context to Thumb if needed before
+disassembly. These entries are better starting points than the nearby log
+strings because they come directly from the AT command dispatch table.
+
 ## AMSS Service String Reference Report
 
 After importing `amss.bin`, this local-only report asks Ghidra for references to

@@ -34,6 +34,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 
 - `tools/firmware_survey.py`: read-only scanner for firmware files.
 - `tools/amss_service_survey.py`: metadata-only AMSS service/debug string survey.
+- `tools/amss_at_table_probe.py`: metadata-only probe for AMSS AT command dispatch records.
 - `tools/amss_string_xref_probe.py`: raw multi-base xref probe for selected AMSS service strings.
 - `tools/factoryfs_survey.py`: metadata-only survey for the FactoryFs FAT16 image.
 - `tools/imrc_probe.py`: metadata-only probe for IMRC/resource-bank structure.

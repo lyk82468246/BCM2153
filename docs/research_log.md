@@ -171,4 +171,12 @@ or USB AT strings. Ghidra's reference manager did find CAPI2 references:
 `CAPI2AT_Q` from `FUN_80305888`, `CP2ATC_Q` from `FUN_803059a4`, and all three
 `CAPI2_FFS_Control` strings from `FUN_80311c34`. The memory-debug and USB AT
 strings still need Thumb/dispatch-table/string-table tracing.
+## 2026-06-30 AMSS AT dispatch table probe
 
+Added `tools/amss_at_table_probe.py` to scan 24-byte AT command dispatch
+records. The corrected scan found 232 candidate records. Important results:
+`*MUSBTST` dispatches through record `0x43e9b4` to Thumb handler
+`0x803023ac`, `*MTESTUSB` through record `0x43e9cc` to `0x803021c4`, and
+`*MAUDLOG` through record `0x43e9fc` to `0x803020a0`. This confirms the USB AT
+test strings are reachable from visible AT command names, while the ARM memory
+debug strings still need a separate command or case-level trace.
