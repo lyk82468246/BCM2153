@@ -38,16 +38,20 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `tools/amss_string_xref_probe.py`: raw multi-base xref probe for selected AMSS service strings.
 - `tools/factoryfs_survey.py`: metadata-only survey for the FactoryFs FAT16 image.
 - `tools/imrc_probe.py`: metadata-only probe for IMRC/resource-bank structure.
+- `tools/imrc_public_compare.py`: metadata-only comparison against the public Quram/Imaster IMRC format model.
 - `tools/ghidra_import.sh`: local-only Ghidra project builder for key images.
 - `tools/ghidra_scripts/FindAmssServiceStringRefs.java`: Ghidra report for selected AMSS service-string refs.
 - `tools/shpapp_ghidra_import.sh`: local-only Ghidra importer for the ShpApp embedded ELF.
 - `tools/shpapp_entry_probe.py`: metadata and short disassembly probe for the ShpApp entry region.
+- `tools/ghidra_scripts/ProbeShpAppHostAbi.java`: bounded Thumb analysis of the ShpApp entry, dispatcher, and host interface registration.
 - `docs/firmware_facts.md`: durable facts and offsets.
 - `docs/amss_service_clues.md`: AMSS AT/USB/CAPI2/debug service string clues.
 - `docs/system_architecture.md`: current firmware architecture map.
+- `docs/reverse_engineering_plan.md`: staged investigation plan, currently focused on boot/unpacking, applications, resources, and filesystems; cellular work is deferred.
 - `docs/boot_chain.md`: boot-chain hypotheses and evidence.
 - `docs/bcmboot_analysis.md`: first-stage loader disassembly notes.
 - `docs/shpapp_analysis.md`: Samsung ShpApp/FimBIN native ELF notes.
+- `docs/shpapp_host_abi.md`: entry-to-dispatch flow and incoming/outgoing host interface observations.
 - `docs/resource_layer.md`: IMRC/ShpApp/FactoryFs resource observations.
 - `docs/factoryfs_analysis.md`: FAT16 FactoryFs directory and extension map.
 - `docs/ghidra_import.md`: reproducible Ghidra headless import workflow.
@@ -55,6 +59,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `docs/analysis/initial_survey.md`: manually filtered survey summary.
 - `docs/research_log.md`: running research notes and milestones.
 - `docs/publication_policy.md`: what is safe to publish here.
+- `docs/public_references.md`: dated external references and search leads used as format context.
 - `docs/tooling.md`: WSL-only workflow and local tool notes.
 
 ## First command

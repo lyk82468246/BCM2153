@@ -15,6 +15,14 @@ python3 tools/resource_magic_survey.py \
 python3 tools/imrc_probe.py \
   /home/joe/thing/Rsrc_B5310_China.rc1 \
   --out out/imrc_probe
+
+Public-format comparison (metadata only):
+
+```sh
+python3 tools/imrc_public_compare.py \
+  /home/joe/thing/Rsrc_B5310_China.rc1 \
+  --out out/imrc_public_compare/imrc_public_compare.json
+```
 ```
 
 ## Rsrc_B5310_China.rc1
@@ -22,7 +30,20 @@ python3 tools/imrc_probe.py \
 - File starts with `IMRC`.
 - Size: `0x2e0cdb6` bytes.
 - Header words begin with `IMRC`, `0x02000400`, `0x00001000`, `0x0000000c`,
-  `0x00000006`, and `0x04365bbc`; the exact table format is still unknown.
+  `0x00000006`, `0x04365bbc`, and `0x00004366`. A public
+  [ImrcUnpacker](public_references.md) implementation defines the same fields
+  as a Quram IMRC header: block size `0x1000`, distance bits `12/6`, declared
+  decompressed size `0x04365bbc` (70,671,292 bytes), and 17,254 blocks.
+- Under that public model, the block table starts at `0x20` and ends at
+  `0x21b50`; compressed data begins there. The first 17,253 command/data
+  records have plausible sizes and accumulate to `0x2e0c65b`, leaving 1,883
+  bytes before EOF. The final declared record has command size `0x1ea` and data
+  size `0x76efaff5`, which cannot fit the file. The tail contains the known
+  `cd ab cd ab` TkTool marker at `0x2e0c9b6`.
+- This is strong format corroboration, not a successful full decompression. The
+  last record/tail boundary may represent a packaging variant, trailer field,
+  or an incompatibility with the public implementation. Keep it as an explicit
+  unknown until a bounded decoder test validates block output.
 - Magic counts from a first pass:
 
 | Magic | Count | First observed offset |
@@ -44,14 +65,12 @@ Visible UI/resource strings include `Idle`, `WidgetTray`, `WidgetMemo`,
 `tools/imrc_probe.py` performs a stricter metadata-only pass over `IMRC` files.
 For `Rsrc_B5310_China.rc1`:
 
-- Header fields are `version_word=0x02000400`, `table_or_header_size=0x1000`,
-  `word_0x0c=0x0c`, `word_0x10=0x06`, and `word_0x14=0x04365bbc`.
-  `word_0x14` is larger than the file size, so it may be an unpacked, virtual,
-  or tool-side size rather than a direct file length.
-- The first `0x1000` bytes after the magic do not look like a direct absolute
-  offset/length table. Most words after `0x18` are small values, which is more
-  consistent with a compact index, size/Huffman-style table, or another encoded
-  structure.
+- The previous probe treated the `0x1000` field as a possible table/header size.
+  The public-format comparison gives a more specific alternative: it is the
+  decompression block size, while the 8-byte block table begins at `0x20`.
+- The first 17,253 records fit the public command/data-size model. The final
+  record is malformed against the private file length, so no extraction should
+  assume the table is valid through all 17,254 entries.
 - Naive magic scans overcount real resource boundaries. Current strict parsing
   finds 115 complete PNG spans out of 137 PNG magic hits, 7 complete `FWS` SWF
   spans out of 17, and 18 complete `CWS` SWF spans out of 29.
@@ -115,7 +134,8 @@ plus a checksum/signature-like trailer rather than a second full resource bank.
 
 ## Next questions
 
-1. Decode the `IMRC` header and entry table format.
+1. Validate the public Quram/IMRC decoder against bounded local blocks and
+   resolve the malformed final record versus the TkTool tail.
 2. Map `Rsrc` resource IDs to ShpApp references.
 3. Determine whether `Rsrc2_B5310U(Low/Mid).rc2` are density/profile variants or
    secondary resource banks.

@@ -1,5 +1,37 @@
 # Research log
 
+## 2026-10-23 non-cellular REA continuation
+
+Deferred cellular protocols, SIM/call/SMS, RF and baseband DSP work. Verified
+all 15 documented firmware sample sizes and SHA-256 digests against the private
+sample set, and reused the existing ShpApp Ghidra project.
+
+REA CLI successfully detected `/opt/ghidra_12.1_PUBLIC` through its invocation
+environment. ShpApp whole-ELF analysis timed out under two different profiles;
+a new read-only `ProbeShpAppHostAbi.java` instead completed six bounded Thumb
+decompilations, corroborated with objdump. Findings include a returned Thumb
+dispatcher, `0/1` lifecycle candidates, a 20-slot outgoing method table, and
+incoming host-interface offsets. See `docs/shpapp_host_abi.md`; these ordinary
+tool observations are not labelled as REA Evidence.
+
+For bcmboot, an approved REA run outside the sandbox resolved the Unix-socket
+restriction. An explicit function seed at `0x28000030` produced Evidence
+`ev_d0a27ed64562ec96678d620540261f8b393d8792dd70ef06ee2190ed3b031c5c`
+and a local snapshot. The main path copies NAND page-plus-extra-area data,
+checks the first RAM header, advances by page size, uses RAM `+0x24` as an end
+criterion, and branches to `0x08400000`. No explicit software decoder was
+identified within that bounded loop; the standalone boot2/package relationship
+remains open. See `docs/bcmboot_analysis.md`.
+
+Public research added a dated reference to `raulmrio28-git/ImrcUnpacker` at
+commit `de8a85c342b431b7d18778c8c31e28fb8d21169e`. Its Quram IMRC header model
+matches the local Rsrc header through the block count and distance bits.
+`tools/imrc_public_compare.py` confirms a `0x20` block-table start, `0x21b50`
+data start, 17,253 plausible records and a 1,883-byte tail containing the
+known TkTool marker; the final declared record is malformed against the file
+length. This is a format hypothesis with strong external corroboration, not a
+completed resource decompression.
+
 ## 2026-06-27 initial state
 
 The working sample directory is `/home/joe/thing` in WSL. It contains a Samsung

@@ -44,9 +44,12 @@ With `bcmboot.img` imported from file offset `0x40` to base `0x28000000`:
   `0x28000350`.
 
 `boot2.img` file offset `0x20` is not `0xbabeface` in the local sample, so
-`bcmboot.img` is probably not jumping to the raw file bytes directly. The boot2
-file is likely decoded, decrypted, decompressed, or loaded from a different NAND
-representation before the RAM header check passes.
+`bcmboot.img` is probably not jumping to the raw file bytes directly. Possible
+explanations include a different NAND/package representation or a transformation
+elsewhere in the loading/flashing path. The REA follow-up in
+[bcmboot_analysis.md](bcmboot_analysis.md) identifies page-plus-extra-area copying
+in the main load loop and no explicit software decoder inside that bounded loop.
+The mismatch alone does not distinguish compression, encryption, or packaging.
 
 ## Next questions
 

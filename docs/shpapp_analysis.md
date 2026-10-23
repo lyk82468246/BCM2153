@@ -126,6 +126,11 @@ analyzed as code versus bundled resources.
 
 ## Next questions
 
+The bounded follow-up in [shpapp_host_abi.md](shpapp_host_abi.md) now traces
+the entry's returned Thumb dispatcher, its `0/1` branches, and a 20-slot
+outgoing interface table. It also records the incoming interface offsets;
+the host provider and complete method semantics remain unknown.
+
 1. Is the embedded ELF loaded directly at `0x0e000000`, or relocated by the
    FimBIN loader?
 2. Which image or loader consumes `FimBIN` containers?
