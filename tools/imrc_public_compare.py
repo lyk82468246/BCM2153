@@ -4,111 +4,72 @@
 Metadata only: this script never decompresses or extracts vendor resources.
 """
 from __future__ import annotations
-
 import argparse
 import hashlib
 import json
 import struct
 from pathlib import Path
-
-PUBLIC_REPO = "https://github.com/raulmrio28-git/ImrcUnpacker"
-PUBLIC_COMMIT = "de8a85c342b431b7d18778c8c31e28fb8d21169e"
-
-
-def u32(data: bytes, off: int) -> int:
-    if off < 0 or off + 4 > len(data):
-        raise ValueError(f"u32 outside file at 0x{off:x}")
-    return struct.unpack_from("<I", data, off)[0]
-
+PUBLIC_REPO = 'https://github.com/raulmrio28-git/ImrcUnpacker'
+PUBLIC_COMMIT = 'de8a85c342b431b7d18778c8c31e28fb8d21169e'
 
 def inspect(path: Path) -> dict:
+    if path.stat().st_size > 512 * 1024 * 1024:
+        return {'path': str(path), 'format_candidate': False, 'reason': 'input exceeds 512 MiB safety limit'}
     data = path.read_bytes()
-    result: dict = {
-        "path": str(path),
-        "size": len(data),
-        "sha256": hashlib.sha256(data).hexdigest(),
-        "public_reference": {"repo": PUBLIC_REPO, "commit": PUBLIC_COMMIT},
-        "parser": "Quram IMRC header model; metadata only",
-    }
-    if data[:4] != b"IMRC":
-        result.update({"format_candidate": False, "reason": "first four bytes are not IMRC"})
+    result: dict = {'path': str(path), 'size': len(data), 'sha256': hashlib.sha256(data).hexdigest(), 'public_reference': {'repo': PUBLIC_REPO, 'commit': PUBLIC_COMMIT}, 'parser': 'Quram IMRC header model; metadata only'}
+    if data[:4] != b'IMRC':
+        result.update({'format_candidate': False, 'reason': 'first four bytes are not IMRC'})
         return result
-    version, block_size, ext_bits, std_bits, decomp_size, blocks = struct.unpack_from(
-        "<6I", data, 4
-    )
-    table_offset = 0x20
-    table_end = table_offset + blocks * 8
-    result.update(
-        {
-            "format_candidate": True,
-            "header": {
-                "magic_ascii": "IMRC",
-                "magic_le": hex(u32(data, 0)),
-                "version": hex(version),
-                "block_size": block_size,
-                "distance_extended_bits": ext_bits,
-                "distance_standard_bits": std_bits,
-                "decompressed_size": decomp_size,
-                "block_count": blocks,
-            },
-            "block_table": {"offset": hex(table_offset), "end": hex(table_end)},
-        }
-    )
-    if table_end > len(data):
-        result["block_table"]["complete"] = False
-        result["block_table"]["reason"] = "declared table exceeds file"
+    if len(data) < 0x1c:
+        result.update({'format_candidate': False, 'reason': 'truncated IMRC header'})
         return result
-    records = [struct.unpack_from("<2I", data, table_offset + i * 8) for i in range(blocks)]
-    # The public implementation treats each pair as command/data sizes. Keep
-    # malformed tail records visible instead of silently treating them as data.
-    usable = []
-    packed_sum = 0
-    for index, (command_size, data_size) in enumerate(records):
-        if command_size > len(data) or data_size > len(data) or command_size + data_size > len(data):
-            break
-        usable.append({"index": index, "command_size": command_size, "data_size": data_size})
-        packed_sum += command_size + data_size
-    data_offset = table_end
-    computed_end = data_offset + packed_sum
-    tail = data[computed_end:]
-    result["block_table"].update(
-        {
-            "complete": len(usable) == blocks,
-            "records_examined": len(usable),
-            "data_offset": hex(data_offset),
-            "usable_packed_sum": packed_sum,
-            "computed_end": hex(computed_end),
-            "computed_end_in_file": computed_end <= len(data),
-            "tail_bytes_after_usable_records": len(tail),
-            "tail_sha256": hashlib.sha256(tail).hexdigest(),
-            "first_records": usable[:5],
-            "last_usable_records": usable[-5:],
-            "last_declared_record": {
-                "index": blocks - 1,
-                "command_size": records[-1][0],
-                "data_size": records[-1][1],
-            },
-        }
-    )
-    marker = b"\xcd\xab\xcd\xab"
-    marker_positions = [i for i in range(max(0, len(data) - 4096), len(data) - 3) if data[i:i+4] == marker]
-    result["packaging_marker"] = {"marker": marker.hex(), "last_4k_offsets": [hex(x) for x in marker_positions]}
+    version, block_size, ext_bits, std_bits, decomp_size, blocks = struct.unpack_from('<6I', data, 4)
+    if version != 0x02000400:
+        result.update({'format_candidate': False, 'reason': 'unsupported version', 'version': hex(version)})
+        return result
+    result.update({'format_candidate': True, 'header': {'magic_ascii': 'IMRC', 'version': f'0x{version:08x}', 'block_size': block_size, 'distance_extended_bits': ext_bits, 'distance_standard_bits': std_bits, 'decompressed_size': decomp_size, 'block_count': blocks}})
+    marker = data.rfind(b'\xcd\xab\xcd\xab', max(0, len(data) - 4096))
+    result['packaging_marker'] = {'marker': 'cdabcdab', 'offset': hex(marker) if marker >= 0 else None}
+    result['block_table'] = table_model(data, blocks, 0x1c, len(data))
+    result['boundary_models'] = {'eof': table_model(data, blocks, 0x1c, len(data))}
+    if marker >= 0:
+        result['boundary_models']['tktool'] = table_model(data, blocks, 0x1c, marker)
+    result['previous_misaligned_model'] = table_model(data, blocks, 0x20, len(data))
     return result
 
+def table_model(data: bytes, blocks: int, base: int, boundary: int) -> dict:
+    """Summarize a table hypothesis without reading records past the file."""
+    table_end = base + blocks * 8
+    result = {'offset': hex(base), 'end': hex(table_end), 'boundary': hex(boundary)}
+    if not 0 < blocks <= 131072 or base < 0 or not table_end <= boundary <= len(data):
+        return result | {'complete': False, 'reason': 'declared table exceeds boundary or count limit'}
+    pos = table_end
+    first = []
+    last = []
+    for i in range(blocks):
+        cmd, dat = struct.unpack_from('<II', data, base + i * 8)
+        record = {'index': i, 'table_offset': hex(base + i * 8), 'command_size': cmd, 'data_size': dat, 'packed_offset': hex(pos), 'packed_end': hex(pos + cmd + dat)}
+        if pos + cmd + dat > boundary:
+            return result | {'complete': False, 'records_examined': i, 'computed_end': hex(pos), 'first_records': first, 'last_usable_records': last, 'invalid_record': record}
+        if i < 3:
+            first.append(record)
+        last = (last + [record])[-3:]
+        pos += cmd + dat
+    return result | {'complete': True, 'records_examined': blocks, 'computed_end': hex(pos), 'first_records': first, 'last_usable_records': last, 'bytes_after_records_to_boundary': boundary - pos, 'tail_sha256': hashlib.sha256(data[pos:boundary]).hexdigest()}
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("paths", nargs="+", type=Path)
-    parser.add_argument("--out", type=Path)
+    parser.add_argument('paths', nargs='+', type=Path)
+    parser.add_argument('--out', type=Path)
     args = parser.parse_args()
-    report = {"files": [inspect(path) for path in args.paths]}
-    rendered = json.dumps(report, indent=2, sort_keys=True) + "\n"
+    if args.out and any(args.out.resolve() == p.resolve() for p in args.paths):
+        parser.error('--out must differ from all input files')
+    report = {'files': [inspect(path) for path in args.paths]}
+    rendered = json.dumps(report, indent=2, sort_keys=True) + '\n'
     if args.out:
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text(rendered)
     else:
-        print(rendered, end="")
-
-
-if __name__ == "__main__":
+        print(rendered, end='')
+if __name__ == '__main__':
     main()

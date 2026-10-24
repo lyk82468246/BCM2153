@@ -1,83 +1,140 @@
 # Resource layer notes
 
-This page summarizes the first pass over UI/media/resource containers. It keeps
-only counts and short offsets; generated `out/` reports stay local-only.
+This page summarizes UI/media/resource container findings. Complete generated
+reports and extracted assets stay local-only under `out/`.
 
-Generated locally with:
+## Rsrc_B5310_China.rc1: bounded decoding verified
 
-```sh
-python3 tools/resource_magic_survey.py \
-  /home/joe/thing/Rsrc_B5310_China.rc1 \
-  /home/joe/thing/ShpApp.app \
-  /home/joe/thing/FactoryFs_B5310_China.ffs \
-  --out out/resource_magic_survey
+The tested sample is `0x2e0cdb6` bytes, SHA-256
+`425f464bbdaae55fb685bd3e2636b76473cd787dde8a6dadd66f03e8c521e1e3`.
+The header declares version `0x02000400`, block size `0x1000`, extended/standard
+byte-distance widths `12/6`, decompressed size `0x04365bbc` (70,671,292 bytes),
+and `0x4366` (17,254) blocks. The local decoder supports this version only.
 
-python3 tools/imrc_probe.py \
-  /home/joe/thing/Rsrc_B5310_China.rc1 \
-  --out out/imrc_probe
+**Correction, 2026-10-24:** the versioned header is **28 bytes (`0x1c`)**, not
+`0x20`. The public `QuramDataDecompInit` computes `2 * sizeof(DWORD) +
+sizeof(tk15_IMRCHeader)` = `8 + 20`. The prior metadata script's extra four
+bytes mixed each data length with the following command length and created an
+apparent malformed last record. This was an analyst/parser error rather than
+evidence of a damaged final IMRC record.
 
-Public-format comparison (metadata only):
+### Table and tail boundaries
+
+All ranges below are half-open file offsets; indices are zero-based.
+
+| Structure | File interval | Interpretation |
+| --- | --- | --- |
+| Header | `[0, 0x1c)` | Magic, version, five header fields |
+| Block table | `[0x1c, 0x21b4c)` | 17,254 command/data length pairs |
+| Packed blocks | `[0x21b4c, 0x2e0c9b6)` | Every record fits EOF and the TkTool boundary |
+| Record 17252 | table `0x21b3c`; packed `[0x2e0c3a4, 0x2e0c6d8)` | Command/data `0x13f/0x1f5`; output 4,096 bytes |
+| Record 17253 | table `0x21b44`; packed `[0x2e0c6d8, 0x2e0c9b6)` | Command/data `0xf4/0x1ea`; output 3,004 bytes |
+| TkTool tail | `[0x2e0c9b6, 0x2e0cdb6)` | Exactly 1,024 bytes, begins `cd ab cd ab` |
+
+The corrected first 17,253 records end at `0x2e0c6d8`. The old `0x20` model
+still reproduces its former first-17,253 end `0x2e0c65b` and its putative last
+pair `(0x1ea, 0x76efaff5)` at `0x21b48`. That second word actually comes from
+packed data at `0x21b4c`, beyond the real table. The corrected first pairs are
+`(373,827)`, `(242,655)`, `(315,694)`; their packed offsets are `0x21b4c`,
+`0x21ffc`, `0x2237d`, and the third ends at `0x2276e`.
+
+Both boundary models were exercised: treating EOF as available IMRC input and
+excluding the tail at the TkTool marker. All table records fit both; the same
+20 selected blocks decode identically under both. The last block consumes its
+490 data bytes exactly and ends at the marker. Together with the declared
+output length, this supports treating the final KiB as packaging metadata for
+this sample. Merely making that KiB available to the decoder does not cause
+it to be consumed. The tail's internal field meanings/checksum remain unknown;
+this finding does not establish a universal TkTool specification.
+
+### Reproduce bounded output
 
 ```sh
 python3 tools/imrc_public_compare.py \
   /home/joe/thing/Rsrc_B5310_China.rc1 \
-  --out out/imrc_public_compare/imrc_public_compare.json
+  --out out/imrc_bounded_decode/table_models.json
+
+python3 tools/imrc_bounded_decode.py \
+  /home/joe/thing/Rsrc_B5310_China.rc1 \
+  --blocks 0,1,2,100,1000,10000,17252,17253,4198:4203,5097:5099,13001:13005,12951 \
+  --scan-resources --boundary tktool \
+  --extract-dir out/imrc_bounded_decode/blocks \
+  --out out/imrc_bounded_decode/report.json
 ```
-```
 
-## Rsrc_B5310_China.rc1
+Ranges use an exclusive end. The default selects only blocks `0,1,2` and writes
+JSON metadata. Each selected block starts with an empty output buffer and a
+distance of four; observed blocks decode independently. The implementation
+rejects a distance outside the already produced block bytes, rejects zero and
+one-byte word distances, and requires each block's exact declared output length
+and data-stream consumption. Command bits are MSB first; the fixed 256-word XOR
+dictionary follows the [public Quram model](public_references.md).
 
-- File starts with `IMRC`.
-- Size: `0x2e0cdb6` bytes.
-- Header words begin with `IMRC`, `0x02000400`, `0x00001000`, `0x0000000c`,
-  `0x00000006`, `0x04365bbc`, and `0x00004366`. A public
-  [ImrcUnpacker](public_references.md) implementation defines the same fields
-  as a Quram IMRC header: block size `0x1000`, distance bits `12/6`, declared
-  decompressed size `0x04365bbc` (70,671,292 bytes), and 17,254 blocks.
-- Under that public model, the block table starts at `0x20` and ends at
-  `0x21b50`; compressed data begins there. The first 17,253 command/data
-  records have plausible sizes and accumulate to `0x2e0c65b`, leaving 1,883
-  bytes before EOF. The final declared record has command size `0x1ea` and data
-  size `0x76efaff5`, which cannot fit the file. The tail contains the known
-  `cd ab cd ab` TkTool marker at `0x2e0c9b6`.
-- This is strong format corroboration, not a successful full decompression. The
-  last record/tail boundary may represent a packaging variant, trailer field,
-  or an incompatibility with the public implementation. Keep it as an explicit
-  unknown until a bounded decoder test validates block output.
-- Magic counts from a first pass:
+The tool memory-maps input read-only, caps selected output at 8 MiB, block size
+at 64 KiB, and header-declared total output/input at 512 MiB each. It never
+allocates the declared whole-bank output. A malformed table is rejected before
+decoding; stream errors stop at the failing block and retain prior block
+metadata and diagnostic offsets in JSON. Raw bytes are written only when
+`--extract-dir` is supplied, to a separate directory. Validated PNG extraction
+can join adjacent selected blocks; it never joins gaps. Resources extending
+outside a selected window remain unvalidated. Magic reports are capped at
+32 per type per block and 256 per type per contiguous scan window; validated
+PNG reports/extractions are capped at 256 per window.
 
-| Magic | Count | First observed offset |
-| --- | ---: | ---: |
-| `PNG` | 137 | `0x00a037d2` |
-| `GIF89a` | 1 | `0x00a04e49` |
-| `JFIF` | 122 | `0x01ee54db` |
-| `XML` | 16 | `0x00d1d82b` |
-| `BWFXML` | 27 | `0x00d1e935` |
-| `ZIP_local` | 3 | `0x0002fea7` |
-| `SWF_FWS` | 17 | `0x01eb4412` |
-| `SWF_CWS` | 29 | `0x00dceca1` |
+20 selected blocks (80,828 output bytes) passed local decoding. Eleven were
+also compared against the temporary public C implementation; every length and
+SHA-256 matched. Representative results:
 
-Visible UI/resource strings include `Idle`, `WidgetTray`, `WidgetMemo`,
-`BluetoothIcon`, `GamesIcon`, `WidgetSetting`, `Menu`, and `Main`.
+| Block | Output bytes | Output SHA-256 |
+| ---: | ---: | --- |
+| 0 | 4096 | `1b5b531f0eac403b2bf07664bad0493316723880d1d1865a2f1bf19d5884126f` |
+| 10000 | 4096 | `3043b88a81746f398ac31897eaff5e9a69050305cc2e097e39de141e25cc8656` |
+| 17252 | 4096 | `e2c151e4d52ca7025843acc0c68af898533d2c3924016b29d9b89c7256692638` |
+| 17253 | 3004 | `4278d17e4e6a5ce52f9d2f7cb7dab009bb4fcbfe4408b352b865a2c9b011dca9` |
 
-### IMRC probe findings
+This verifies selected compression blocks and bounded resource spans. It does
+not establish a complete resource-bank unpack or ID-to-resource map.
 
-`tools/imrc_probe.py` performs a stricter metadata-only pass over `IMRC` files.
-For `Rsrc_B5310_China.rc1`:
+### Actual resource boundaries and content features
 
-- The previous probe treated the `0x1000` field as a possible table/header size.
-  The public-format comparison gives a more specific alternative: it is the
-  decompression block size, while the 8-byte block table begins at `0x20`.
-- The first 17,253 records fit the public command/data-size model. The final
-  record is malformed against the private file length, so no extraction should
-  assume the table is valid through all 17,254 entries.
-- Naive magic scans overcount real resource boundaries. Current strict parsing
-  finds 115 complete PNG spans out of 137 PNG magic hits, 7 complete `FWS` SWF
-  spans out of 17, and 18 complete `CWS` SWF spans out of 29.
-- JFIF, XML, and BWFXML strings are visible, but this pass does not yet bound
-  them as standalone resource records. Treat them as evidence of embedded
-  content, not as safe replacement boundaries.
+These offsets are in the **decompressed logical bank**, not the `.rc1` file:
 
+| Feature | Logical offset | Evidence |
+| --- | --- | --- |
+| PNG | `0x1068d78` | 996-byte span, IHDR through IEND; every chunk CRC checked |
+| XML | `0x13e9ec6` | Parsed 1,580-byte WAV iXML chunk; root `BWFXML` |
+| BWFXML | `0x13e9eee` | Root element inside the WAV iXML chunk |
+| FWS | `0x3297de8` | Indexed Bluetooth SWF; header/tag extents validated through End |
+| JFIF | `0x32c9802` | Feature inside indexed Bluetooth SWF; JPEG subextent unknown |
+
+Ten complete PNGs were bounded and extracted in the selected `4198:4203`
+window. The first crosses blocks 4200/4201, ends at `0x106915c`, and hashes to
+`178085e5cc8cc651a51102bd52df565f3f9eba86779b2fae27f729feac03de45`.
+Extraction follows PNG chunk lengths and validated CRCs through a zero-length
+IEND; it is not a carve from one magic to the next. This verifies the encoded
+PNG span, not all raster semantics. Subsequent directory parsing also bounds
+the named SWF/XML files and the nested WAV iXML chunk; see the index pass below.
+No independent resource extent is claimed from magic alone. In particular a CWS header's declared size is the **uncompressed**
+SWF size, not its compressed file span; earlier probe counts using it as a
+compressed boundary must not be treated as validated extraction results.
+
+Earlier packed-byte surveys (`resource_magic_survey.py`, `imrc_probe.py`)
+remain useful for seeds only: they found 137 PNG, 122 JFIF, 16 XML, 27 BWFXML,
+17 FWS, and 29 CWS features in the compressed file. Packed-byte signature
+counts and candidate chunk chains do not count independent decoded resources.
+
+## Logical directory and RBM index follow-up
+
+The [resource index pass](imrc_resource_index.md) recovers 101 directories and
+736 file entries from only 11 initial blocks. Metadata ends at `0xad3c`;
+file offsets/lengths cover the bank with at most three bytes of alignment
+between payloads. Named PNG, SWF, XML and WAV files were located by these
+entries and structurally validated at their exact indexed lengths.
+
+All 139 RBM files also expose bounded local indices: 11,539 records with IDs
+restarting at zero per file, contiguous body extents and matching body IDs.
+The new tool can select and hash a body by path and local ID. Pixel decoding,
+global application ID composition and the consuming loader remain unknown.
 
 ## ShpApp.app resources
 
@@ -134,8 +191,8 @@ plus a checksum/signature-like trailer rather than a second full resource bank.
 
 ## Next questions
 
-1. Validate the public Quram/IMRC decoder against bounded local blocks and
-   resolve the malformed final record versus the TkTool tail.
+1. Recover global resource-ID composition and RBM pixel encoding; file lookup
+   and RBM local-ID extents are now verified.
 2. Map `Rsrc` resource IDs to ShpApp references.
 3. Determine whether `Rsrc2_B5310U(Low/Mid).rc2` are density/profile variants or
    secondary resource banks.

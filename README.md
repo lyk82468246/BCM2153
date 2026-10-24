@@ -37,6 +37,9 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `tools/amss_at_table_probe.py`: metadata-only probe for AMSS AT command dispatch records.
 - `tools/amss_string_xref_probe.py`: raw multi-base xref probe for selected AMSS service strings.
 - `tools/factoryfs_survey.py`: metadata-only survey for the FactoryFs FAT16 image.
+- `tools/imrc_resource_index.py`: bounded logical directory lookup and RBM local-ID span validation.
+- `tools/imrc_bounded_decode.py`: bounded Quram IMRC block decoder with CRC-checked PNG span extraction.
+- `tests/test_imrc_bounded_decode.py`: synthetic safety regressions and optional private-sample checks.
 - `tools/imrc_probe.py`: metadata-only probe for IMRC/resource-bank structure.
 - `tools/imrc_public_compare.py`: metadata-only comparison against the public Quram/Imaster IMRC format model.
 - `tools/ghidra_import.sh`: local-only Ghidra project builder for key images.
@@ -52,6 +55,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `docs/bcmboot_analysis.md`: first-stage loader disassembly notes.
 - `docs/shpapp_analysis.md`: Samsung ShpApp/FimBIN native ELF notes.
 - `docs/shpapp_host_abi.md`: entry-to-dispatch flow and incoming/outgoing host interface observations.
+- `docs/imrc_resource_index.md`: verified named-file layout and RBM local indices.
 - `docs/resource_layer.md`: IMRC/ShpApp/FactoryFs resource observations.
 - `docs/factoryfs_analysis.md`: FAT16 FactoryFs directory and extension map.
 - `docs/ghidra_import.md`: reproducible Ghidra headless import workflow.

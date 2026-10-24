@@ -212,3 +212,198 @@ records. The corrected scan found 232 candidate records. Important results:
 `*MAUDLOG` through record `0x43e9fc` to `0x803020a0`. This confirms the USB AT
 test strings are reachable from visible AT command names, while the ARM memory
 debug strings still need a separate command or case-level trace.
+
+## 2026-10-24 bounded IMRC decode and tail correction
+
+Scope: `Rsrc_B5310_China.rc1` only. Cellular/AMSS/RF/SIM/baseband analysis was
+excluded. Used the `reverse-engineer-anything` workflow for evidence boundaries;
+all new format conclusions below come from ordinary local Python/C tools.
+REA firmware inspection first hit an approval-review timeout; the later session
+query succeeded and confirmed no open target and no configured firmware
+provider. No REA signature result is claimed, no configuration was changed,
+and no flashing utility was executed.
+
+Sample identity: 48,287,158 bytes; SHA-256
+`425f464bbdaae55fb685bd3e2636b76473cd787dde8a6dadd66f03e8c521e1e3`.
+Tools: CPython 3.14.4; GCC/cc 15.2.0; public ImrcUnpacker commit
+`de8a85c342b431b7d18778c8c31e28fb8d21169e`.
+
+The plan's starting `0x20` block table assumption was incorrect. Comparing
+`QuramDataDecompInit` with the actual bytes establishes `0x1c`. Under the old
+model, 17,253 records end at `0x2e0c65b`; the supposed final `(0x1ea,
+0x76efaff5)` pair straddles the actual table/data boundary. Under the corrected
+model, all 17,254 records fit; the first 17,253 end at `0x2e0c6d8` and the last
+ends at `0x2e0c9b6`, exactly at the final KiB's `cd ab cd ab` marker. Both
+interpretations remain in the metadata report so the former observation is
+reproducible rather than silently discarded.
+
+Added `tools/imrc_bounded_decode.py` and corrected
+`tools/imrc_public_compare.py`. The decoder selects blocks directly, verifies
+all table ranges first, bounds all stream accesses/distances/output sizes, and
+writes structured errors. Supported version is deliberately limited to
+`0x02000400`; other header variants remain untested. An early exploratory
+implementation decoded a prefix through block 17252 in memory; that temporary
+buffer was discarded. The final tool decodes only selected blocks, with an
+8 MiB selection limit and no allocation of the declared 70 MB bank.
+
+Reproduction commands (from repository root):
+
+```sh
+python3 tools/imrc_public_compare.py \
+  /home/joe/thing/Rsrc_B5310_China.rc1 \
+  --out out/imrc_bounded_decode/table_models.json
+
+python3 tools/imrc_bounded_decode.py \
+  /home/joe/thing/Rsrc_B5310_China.rc1 \
+  --blocks 0,1,2,100,1000,10000,17252,17253,4198:4203,5097:5099,13001:13005,12951 \
+  --scan-resources --boundary tktool \
+  --extract-dir out/imrc_bounded_decode/blocks \
+  --out out/imrc_bounded_decode/report.json
+
+# Same selection with EOF still available as IMRC input.
+python3 tools/imrc_bounded_decode.py \
+  /home/joe/thing/Rsrc_B5310_China.rc1 \
+  --blocks 0,1,2,100,1000,10000,17252,17253,4198:4203,5097:5099,13001:13005,12951 \
+  --scan-resources --boundary eof \
+  --out out/imrc_bounded_decode/eof_report.json
+
+IMRC_SAMPLE=/home/joe/thing/Rsrc_B5310_China.rc1 \
+  python3 -m unittest discover -s tests -v
+# Synthetic regressions can also run without IMRC_SAMPLE.
+```
+
+Results: 20 selected blocks / 80,828 output bytes succeeded; both boundary
+models have identical per-block output hashes. The final block produces 3,004
+bytes and consumes all 490 data bytes, ending before TkTool metadata. Ten PNGs
+passed length/CRC checks through IEND and were extracted only under ignored
+`out/`. The first spans adjacent blocks, logical offset `0x1068d78`, length
+996, SHA-256
+`178085e5cc8cc651a51102bd52df565f3f9eba86779b2fae27f729feac03de45`.
+Additional decoded features include XML/BWFXML `0x13e9ec6/0x13e9eee`, FWS
+`0x3297de8`, and JFIF `0x32c9802`. These additional types have no validated
+standalone extent yet. CWS's header size is an uncompressed length, so the
+legacy magic probe's CWS span counts are not safe compressed boundaries.
+
+Public comparison: five cached sources plus two missing headers were placed
+only in `/tmp/imrc-public/`. All original Git blob hashes match the pinned
+commit's tree. Fetching missing files worked through single-file requests;
+batch fetches timed out in automatic approval review, so verified cached
+snapshots supplied the remainder. Temporary LP64/type/macro/copy-helper
+adaptations are detailed in [public_references.md](public_references.md).
+The final comparison uses the unchanged core algorithm and a small original
+harness retained locally in
+`out/imrc_bounded_decode/public_compare_harness.c`:
+
+```sh
+cc -O1 -g -fsanitize=address \
+  /tmp/imrc-public/compare.c /tmp/imrc-public/common/imrc_common.c \
+  -o /tmp/imrc-public/compare
+ASAN_OPTIONS=detect_leaks=0 timeout 15 /tmp/imrc-public/compare \
+  /home/joe/thing/Rsrc_B5310_China.rc1 \
+  0 1 2 100 1000 4200 4201 4202 10000 17252 17253
+```
+
+All eleven selected reference outputs match the local output byte-for-byte,
+length and SHA-256. Initial temporary build attempts exposed upstream LP64 and
+macro incompatibilities; those attempts are not counted as validated runs.
+The public unchecked decoder was not run on deliberately malicious streams.
+The local suite passed 22 tests (21 synthetic/CLI tests plus one optional
+private sample test), including non-IMRC/truncated files, oversized fields,
+record/table bounds, zero/out-of-window distances, command/data exhaustion,
+output length mismatch, literal/XOR/LZ/mixed paths, selection budgets, PNG CRCs
+and cross-block extraction, both tail boundaries, and input preservation.
+
+Local evidence: `out/imrc_bounded_decode/{report,eof_report,table_models,
+cross_check,public_source_identity,public_build_provenance}.json`, `tests.log`,
+and selected block/PNG artifacts. Only original tools, tests and sanitized
+notes enter the tracked change. No complete decompressed bank was saved.
+
+Status: bounded compression and PNG-boundary verification complete. The tail
+boundary is explained for this sample, but internal tail fields/checksum,
+resource-ID/index mapping, complete resource export and Rsrc2 profile mapping
+remain explicit unknowns. Partial block/resource success is not a complete
+resource-library unpack.
+
+## 2026-10-24 logical directory and RBM local-ID follow-up
+
+Continued the resource-only scope after the user requested publishing and
+further work. Ordinary local parsing establishes a directory tree in the
+logical IMRC bank: a 64-byte root header, directory headers of three u32
+parent/directory-count/file-count fields, 48-byte directory entries and 52-byte
+file entries. Both entry types use 44-byte zero-padded names; file entries end
+with offset/length. Parent links, exact metadata adjacency, payload bounds and
+four-byte alignment corroborate the layout across 101 directories / 736 files.
+The index ends at `0xad3c`; the first payload begins there, and file extents
+end at the header's declared bank length. Only 11 initial blocks are needed
+for index enumeration. `[0,0xad3c)` SHA-256:
+`c30c58587eaf4c0dd6179dd1bc86632708ef247f6f10328ac9fb72d29f8d7c77`.
+
+Added `tools/imrc_resource_index.py` with a bounded block LRU, strict names,
+parent/cycle/extent checks, explicit selected-file structural validators and
+optional RBM table/ID selection. Its CLI and layout are documented in
+[imrc_resource_index.md](imrc_resource_index.md). New original tests supplement
+the existing decoder suite: 35 total pass with the private sample enabled.
+No numeric application ID is inferred from directory paths.
+
+Indexed extraction now independently matches the earlier PNG carve:
+`System/Media/Img/Java/checkbox_off.png`, entry `0xb50`, bank offset
+`0x1068d78`, length 996, SHA-256
+`178085e5cc8cc651a51102bd52df565f3f9eba86779b2fae27f729feac03de45`.
+A complete named FWS file, bookmark XML and RIFF/WAV also pass structural
+checks at their exact indexed ends. The earlier XML/BWFXML signature at
+`0x13e9ec6` is a length-bounded 1,580-byte iXML chunk inside `alarm.wav`, with
+root `BWFXML`; it is not a separate top-level file. The earlier JFIF feature
+falls inside `Bluetooth.swf`; JPEG extent remains unknown.
+
+The optional RBM survey checks all 139 files: header words `(0,0x100,count)`,
+16-byte `(kind,local-ID,relative-offset,length)` records, first body at table
+end, consecutive nonoverlapping bodies and exact indexed file end. All 11,539
+local IDs are sequential within their files and agree with the first u32 in
+each body. This recovers a path-plus-local-ID lookup, not global-ID composition
+or pixel encoding. `KJava.rbm` IDs 0 and 8 were selected and exported as
+6,704/9,584 encoded body bytes. Their SHA-256 values are respectively
+`6898c833dc6363a20694d0a44ab235045d08ef4778d0b6bc8448c4b072ea368f`
+and `39780ef4845b3064f8d0116e9450b8c6cf8375c0c07ce174b75d5fa6e4514a8f`.
+
+Reproduction commands:
+
+```sh
+python3 tools/imrc_resource_index.py /home/joe/thing/Rsrc_B5310_China.rc1 \
+  --survey-rbm \
+  --verify System/Media/Img/Java/checkbox_off.png \
+  --verify System/Rsrc/Flash/Bluetooth/Bluetooth.swf \
+  --verify System/Settings/PreConnection/KoreaGumi/User/Br/bookmark.xml \
+  --verify System/MediaSet/Sound/EffectTone/alarm.wav \
+  --extract-dir out/imrc_resource_index/files \
+  --out out/imrc_resource_index/index.json
+python3 tools/imrc_resource_index.py /home/joe/thing/Rsrc_B5310_China.rc1 \
+  --rbm-id System/Rsrc/Bmp/Black/KJava.rbm 0 \
+  --rbm-id System/Rsrc/Bmp/Black/KJava.rbm 8 \
+  --extract-dir out/imrc_resource_index/files \
+  --out out/imrc_resource_index/rbm_selected.json
+IMRC_SAMPLE=/home/joe/thing/Rsrc_B5310_China.rc1 \
+  python3 -m unittest discover -s tests -v
+```
+
+The combined four-file/RBM survey addresses 1,445,576 bytes and decodes
+15,917,056 block bytes through a bounded cache; it does not save a full bank.
+Only requested verified files and requested RBM body bytes are exported under
+ignored `out/`. Full reports: `out/imrc_resource_index/index.json`,
+`rbm_selected.json`, `rbm_probe.json`, `shpapp_path_seeds.json` and `tests.log`.
+Python/GCC/sample identities are unchanged from the preceding entry.
+
+A bounded ShpApp ASCII/UTF-16LE search checked eight selected patterns. The
+only `checkbox_off.png` substring belongs to the complete C string
+`sfb_checkbox_off.png` at container `0x20076`. Exact indexed full paths and the
+other selected basenames were absent in this search, and raw little-endian
+pointer searches for the candidate string addresses produced no hits. No
+resource consumer/caller or absence of one is established; no native target
+was opened and no runtime behavior was observed. Next focus: the resource
+loader/host API that selects an RBM file and local ID, then global-ID encoding
+and one actual consumer. RBM pixel format remains a separate unknown.
+
+Publishing encountered an infrastructure restriction: normal staging failed
+because `.git/index.lock` is on a read-only mount; elevated staging attempts
+hit automatic-approval timeouts. A separate checkout under writable `/tmp` is
+used to prepare the reviewed source/docs/tests for publication. No Git history
+is rewritten, and raw/generated assets remain excluded.
