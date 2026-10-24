@@ -38,6 +38,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `tools/amss_string_xref_probe.py`: raw multi-base xref probe for selected AMSS service strings.
 - `tools/factoryfs_survey.py`: metadata-only survey for the FactoryFs FAT16 image.
 - `tools/rbm_body_probe.py`: bounded RBM mode-0/1 sample expansion and explicitly tentative RGB565 previews.
+- `tools/rbm_bank_survey.py`: bounded bank-wide RBM header checks and optional known-mode sample hashes.
 - `tools/imrc_resource_index.py`: bounded logical directory lookup and RBM local-ID span validation.
 - `tools/imrc_bounded_decode.py`: bounded Quram IMRC block decoder with CRC-checked PNG span extraction.
 - `tests/test_imrc_bounded_decode.py`: synthetic safety regressions and optional private-sample checks.

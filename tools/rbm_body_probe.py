@@ -38,8 +38,12 @@ class BodyHeader:
     placeholder: bool
 
 
-def parse_header(data: bytes) -> BodyHeader:
-    if not 40 <= len(data) <= MAX_BODY:
+def parse_header(data: bytes, *, body_size: int | None = None) -> BodyHeader:
+    """Validate a body, or exactly 40 header bytes plus an indexed body size."""
+    size = len(data) if body_size is None else body_size
+    if len(data) < 40 or (body_size is not None and len(data) != 40):
+        raise BodyError('expected a complete header or exactly 40 header-only bytes')
+    if not 40 <= size <= MAX_BODY:
         raise BodyError('body size outside safety limits')
     words = struct.unpack_from('<10I', data)
     placeholder = words[1:9] == (0xffffffff,) * 8
@@ -47,10 +51,10 @@ def parse_header(data: bytes) -> BodyHeader:
     if header.word_24 != 0x1c:
         raise BodyError('unsupported final header word')
     if placeholder:
-        if len(data) != 40:
+        if size != 40:
             raise BodyError('placeholder has trailing bytes')
         return header
-    if header.word_4 != 1 or header.payload_length != len(data) - 40:
+    if header.word_4 != 1 or header.payload_length != size - 40:
         raise BodyError('header or payload extent mismatch')
     if (not 0 < header.width <= MAX_DIMENSION or not 0 < header.height <= MAX_DIMENSION
             or header.width * header.height > MAX_PIXELS):

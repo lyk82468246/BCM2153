@@ -16,6 +16,15 @@ def body(payload, mode=1, width=3, height=1, bits=16):
 
 
 class BodyTests(unittest.TestCase):
+    def test_header_only_uses_indexed_extent_without_allocating_payload(self):
+        encoded = body(struct.pack('<2H', 0xe0, 1))
+        self.assertEqual(parse_header(encoded[:40], body_size=len(encoded)), parse_header(encoded))
+        for size in (39, len(encoded) + 1, 0xffffffff):
+            with self.subTest(size=size), self.assertRaises(BodyError):
+                parse_header(encoded[:40], body_size=size)
+        with self.assertRaises(BodyError):
+            parse_header(encoded, body_size=len(encoded))
+
     def test_raw_odd_width_has_no_row_padding(self):
         samples = struct.pack('<3H', 0xf800, 0x7e0, 0x1f)
         encoded = body(samples, mode=0)

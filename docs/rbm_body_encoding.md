@@ -70,6 +70,26 @@ IMRC_SAMPLE=/home/joe/thing/Rsrc_B5310_China.rc1 \
   python3 -m unittest discover -s tests -v
 ```
 
+The bank-wide checks are also reproducible without exporting bodies:
+
+```sh
+# Default: indexed headers only, including opaque modes and placeholders.
+python3 tools/rbm_bank_survey.py /home/joe/thing/Rsrc_B5310_China.rc1 \
+  --out out/imrc_resource_index/rbm_headers.json
+# Explicitly expand known encodings and report per-body sample hashes.
+python3 tools/rbm_bank_survey.py /home/joe/thing/Rsrc_B5310_China.rc1 \
+  --decode-modes 0,1 --out out/imrc_resource_index/rbm_modes_0_1.json
+```
+
+The combined header-and-sample command recovered the same 329 outputs and all
+11,539 headers, addressing 1,630,276 logical bytes and decoding 25,579,520 block
+bytes. This includes header/table traversal across all encodings, so it does
+more work than the earlier selected-mode-only check. It stays within the
+reader's 8 MiB addressed-read/32 MiB decode-work budgets and 32-block cache.
+An aggregate 16,384-record limit bounds report memory. Errors retain completed
+records and the failing path/local ID. All 46 tests pass with the private sample,
+including exact bank-wide counts and known-mode expansion.
+
 Default output is JSON metadata and hashes. Export requires explicit paths.
 The tool caps a body at 2 MiB payload plus header, each dimension at 4,096 and
 output at 1,048,576 samples. Invalid extents, zero/overflowing runs, exhausted

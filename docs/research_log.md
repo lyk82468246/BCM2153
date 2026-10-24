@@ -473,3 +473,29 @@ orientation and transparency remain unverified. Reproduction and optional
 private-sample tests are in the linked note. Malformed synthetic tests cover
 run/extent limits and placeholder sentinels. Modes 2/5, global IDs and the host
 bitmap constructor remain unresolved.
+
+## 2026-10-24 Reproducible bank-wide RBM header/sample checks
+
+Added `tools/rbm_bank_survey.py` so the header and known-mode coverage can be
+regenerated directly from the private IMRC sample. Default operation inspects
+only indexed 40-byte headers; `--decode-modes 0,1` explicitly expands known
+streams and stores metadata/hashes, with no byte or image export. Header parsing
+accepts an explicit indexed body size without allocating that body's payload.
+The existing logical-read, work and cache bounds remain in effect, supplemented
+by a 16,384-record aggregate report limit. Unknown modes remain opaque.
+
+The combined command completed with 139 files, 11,539 headers, 2,247
+placeholders and 329 expanded bodies, agreeing with the earlier independent
+surveys. Addressed reads: 1,630,276 bytes; block decode work: 25,579,520 bytes.
+Report: `out/imrc_resource_index/rbm_pixel_probe/reproduced_bank.json`.
+All 46 tests pass with `IMRC_SAMPLE` enabled, including opaque-mode preservation,
+sentinel dimensions, retained failure path/ID and bank-wide real-sample counts.
+Commands are in [rbm_body_encoding.md](rbm_body_encoding.md).
+
+Publication of the preceding `e2de2b1` commit encountered a separate environment
+block: normal SSH rejected system SSH configuration ownership; a sandboxed
+read with clean SSH configuration failed DNS resolution. Two elevated push
+attempts were rejected because automatic approval review did not finish before
+its deadline. These are approval timeouts, not evidence that the commits are
+unsafe. Remote publication has not been confirmed; prepared commits remain in
+the writable temporary checkout recorded under ignored `out/`.
