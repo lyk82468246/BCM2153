@@ -499,3 +499,48 @@ attempts were rejected because automatic approval review did not finish before
 its deadline. These are approval timeouts, not evidence that the commits are
 unsafe. Remote publication has not been confirmed; prepared commits remain in
 the writable temporary checkout recorded under ignored `out/`.
+
+## 2026-10-25 Mode-2 ambiguity and bounded image cross-check
+
+The preceding round's mode-2/16-bit corpus experiments fit a candidate command
+extent in all 4,434 bodies and a simple length/distance model in 4,241; all
+193 exceptions are ContactRsrcBmp records with additional command flags.
+Those experiments did not establish a decoder. First-literal and hidden-seed
+interpretations both satisfy count/distance checks but can produce different
+pixels. All ordinary candidates begin with a literal, so a hidden seed cannot
+be inferred merely from making their tail shorter.
+
+Added original `tools/rbm_mode2_probe.py` and seven regression tests, including
+a real indexed Br_Cd_Etc ID 0 case with two fitting, different candidate hashes,
+a flagged Contact case, and a command extent crossing the 16-bit size boundary.
+The tool never selects a model or exports pixels. All 53 tests pass with the
+private sample enabled; log: `out/imrc_resource_index/tests_mode2_diagnostics.log`.
+Reproduction, exact sample/candidate hashes and limits are documented in
+[rbm_mode2_limits.md](rbm_mode2_limits.md). Stable mode-0/1 decoding is unchanged.
+
+An independent comparison read all 183 indexed PNGs (886,468 bytes), checked
+PNG chunk extents/CRCs, and used Pillow 12.1.1 to compare candidate RGB565/BGR565
+variants with truncation/rounding, row reversal and transparent-key handling.
+No match was found against the 4,241 hidden-seed hashes. Adding 49 BMPs whose
+bfSize matched their indexed length also produced no match; the no-seed model
+was checked on 109 ordinary bodies with matching raster dimensions. This is a
+bounded negative search, not proof that no related image exists. Four other
+BMPs were excluded for inconsistent bfSize/biSizeImage fields; their indexed
+lengths are not thereby disproven. The first PNG comparison addressed 975,164
+bytes/decoded 958,464 block bytes; the BMP and selected no-seed pass addressed
+316,936 bytes/decoded 344,064 block bytes. No whole-bank output was retained.
+
+Local experiments/reports: `rbm_pixel_probe/compare_pngs.py`,
+`compare_no_seed.py`, `png_seed_comparison.json`, `raster_comparison.json`,
+`bmp_extents.json`, `Br_Cd_Etc_0_ambiguity.json`, and
+`ContactRsrcBmp117_unsupported.json`, all under `out/imrc_resource_index/`.
+The exact IMRC digest remains unchanged. Tool versions: Python 3.14.4,
+Pillow 12.1.1, Capstone 5.0.7. A bounded Thumb mask-pattern scan of ShpApp
+yielded 24 windows without establishing an RBM decoder; the ordinary-tool
+report `mode1_native_mask_candidates.json` is local, not REA Evidence.
+
+Publication remains pending the earlier request for guidance after two automatic
+approval timeouts. No further remote push was attempted in this round.
+Next independent native question: the early ShpApp screenshot/bitmap wrapper
+may establish host-created bitmap object layout. Mode-2 framing/pixel identity,
+the indirect host decoder, Rsrc2 and application-wide IDs remain unknown.

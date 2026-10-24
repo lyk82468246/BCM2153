@@ -39,6 +39,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `tools/factoryfs_survey.py`: metadata-only survey for the FactoryFs FAT16 image.
 - `tools/rbm_body_probe.py`: bounded RBM mode-0/1 sample expansion and explicitly tentative RGB565 previews.
 - `tools/rbm_bank_survey.py`: bounded bank-wide RBM header checks and optional known-mode sample hashes.
+- `tools/rbm_mode2_probe.py`: metadata-only competing mode-2 hypotheses; always unresolved, with no raster export.
 - `tools/imrc_resource_index.py`: bounded logical directory lookup and RBM local-ID span validation.
 - `tools/imrc_bounded_decode.py`: bounded Quram IMRC block decoder with CRC-checked PNG span extraction.
 - `tests/test_imrc_bounded_decode.py`: synthetic safety regressions and optional private-sample checks.
@@ -60,6 +61,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `docs/shpapp_host_abi.md`: entry-to-dispatch flow and incoming/outgoing host interface observations.
 - `docs/shpapp_resource_consumer.md`: browser resource callback arguments and their correspondence to indexed RBM local IDs.
 - `docs/rbm_body_encoding.md`: observed body headers, placeholders, and validated mode-0/1 sample expansion.
+- `docs/rbm_mode2_limits.md`: mode-2 framing candidates, counterexamples and image-comparison limits.
 - `docs/imrc_resource_index.md`: verified named-file layout and RBM local indices.
 - `docs/resource_layer.md`: IMRC/ShpApp/FactoryFs resource observations.
 - `docs/factoryfs_analysis.md`: FAT16 FactoryFs directory and extension map.

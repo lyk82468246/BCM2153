@@ -39,6 +39,8 @@ IMRC block bytes using the bounded reader. It did not decompress the full bank.
 The remaining ordinary records are 8,942 mode-2 bodies (4,434 at 16 bits,
 4,508 at 32 bits) and 21 mode-5 bodies (one at 16 bits, 20 at 32 bits).
 Their payloads remain opaque in the stable tool.
+The separate [mode-2 diagnostic](rbm_mode2_limits.md) demonstrates why fitting
+pixel counts do not resolve its literal-stream origin. It exports no raster.
 
 `System/Rsrc/Bmp/Black/MsgTypeIcon.rbm`, ID 0, is a 224-byte body at logical
 offset `0x23b7158`: mode 1, 15 by 15, 184 payload bytes. It yields 225 samples
