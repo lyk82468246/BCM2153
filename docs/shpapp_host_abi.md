@@ -113,6 +113,12 @@ recording only the final instruction's `0x3c` would lose part of the offset.
 
 ## Remaining questions
 
+The follow-up [browser resource pass](shpapp_resource_consumer.md) identifies
+additional incoming interfaces: context `+0x23c`, table `+0x18` receives an
+RBM filename and local-ID candidate; context `+0xe4`, table `+0x18c` receives
+the returned bitmap with graphics handle/coordinates. Their host implementations
+remain unresolved.
+
 1. Which loader constructs `C`, and which functions fill these incoming tables?
 2. What are the registration constants and all 20 outgoing methods?
 3. Who invokes the returned dispatcher, with which event values and arguments?

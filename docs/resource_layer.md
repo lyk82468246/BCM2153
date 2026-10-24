@@ -133,8 +133,12 @@ entries and structurally validated at their exact indexed lengths.
 
 All 139 RBM files also expose bounded local indices: 11,539 records with IDs
 restarting at zero per file, contiguous body extents and matching body IDs.
-The new tool can select and hash a body by path and local ID. Pixel decoding,
-global application ID composition and the consuming loader remain unknown.
+The new tool can select and hash a body by path and local ID. A subsequent
+[body pass](rbm_body_encoding.md) expands 329 mode-0/1 bodies to 16-bit samples;
+mode-2/5 decoding, native color interpretation, global application ID composition and the host loader implementation remain
+unknown. A [bounded ShpApp pass](shpapp_resource_consumer.md) connects six local
+IDs in `SFBrowserRsrc.rbm` to resource callbacks and subsequent drawing calls;
+theme/root resolution remains unverified.
 
 ## ShpApp.app resources
 

@@ -407,3 +407,69 @@ because `.git/index.lock` is on a read-only mount; elevated staging attempts
 hit automatic-approval timeouts. A separate checkout under writable `/tmp` is
 used to prepare the reviewed source/docs/tests for publication. No Git history
 is rewritten, and raw/generated assets remain excluded.
+
+## 2026-10-24 Browser RBM selection and drawing path
+
+Continued Q1/Q5 using only the existing ShpApp and resource-bank samples.
+A bounded 37-string candidate report (`shpapp_resource_strings.json`) led to
+`SFBrowserRsrc.rbm` at parent offset `0xa7d6`, mapped ELF VMA `0x0e008ea8`.
+The resource inventory contains one exact basename match, a 30-record RBM.
+Raw pointer search was negative, but objdump exposed six Thumb ADR references
+with resource-selection arguments 20/21/22/23/24/28. Returns are saved and
+four are passed to drawing calls. This demonstrates why a raw-pointer-only
+negative search did not settle consumer attribution.
+
+The new original `ProbeShpAppBrowserResources.java` uses the existing project
+with `-noanalysis -readOnly`, exact ELF SHA-256 guard, and two analyst-selected
+Thumb code islands. Ghidra 12.1 decoded 279 instructions and completed the
+function decompilation, then discarded analysis changes. ARM objdump version
+`2.45.50.20251209` independently corroborates the call sites. No native code
+was executed; this report is ordinary Ghidra output, not REA Evidence. Known
+full-ELF REA startup timeouts were not retried unchanged.
+
+Initial Ghidra launch failed trying to write `java_home.save` in read-only home
+configuration. Retrying with task-local `XDG_CONFIG_HOME` and `XDG_CACHE_HOME`
+under `/tmp` succeeded without changing persistent configuration.
+
+Reproduction commands and the concise argument/extent table are in
+[shpapp_resource_consumer.md](shpapp_resource_consumer.md). Parent and derived
+ELF digests remain those in [shpapp_host_abi.md](shpapp_host_abi.md); the IMRC
+sample digest remains `425f464bbdaae55fb685bd3e2636b76473cd787dde8a6dadd66f03e8c521e1e3`.
+Generated reports stay at `out/rea_shpapp/browser_resources.ghidra.json`,
+its console/script logs and `out/imrc_resource_index/browser_selected.json`.
+The six selected bodies passed indexed extent/body-ID checks; their SHA-256
+values are in that local report. ID 20 is 1,508 bytes and hashes to
+`74e1ce26539c09eb859c61cfcf9738f37d3010df359d6513fac4e99e54d7fe9a`.
+
+Observed callback paths: context `+0x23c`, vtable `+0x18` for resource selection;
+context `+0xe4`, vtable `+0x18c` for drawing. Returned-object `+8/+0xc` fields
+participate in layout arithmetic; they are not asserted to be encoded-body
+offsets. Matching filename/IDs supports the RBM link, while actual host path
+resolution, theme selection, allocation contract and global IDs remain unknown.
+Native menu ownership, Rsrc2 and TkTool internal fields remain unresolved.
+
+## 2026-10-24 RBM body headers and mode-0/1 expansion
+
+An independent body-header question was delegated as prescribed by the REA
+skill's broader-investigation workflow; native analysis and publication stayed
+with the primary agent. All 11,539 headers were inspected through bounded IMRC
+reads. The 9,292 ordinary bodies have a 40-byte header whose payload count equals
+the enclosing record length minus 40. The other 2,247 are exact 40-byte sentinel
+placeholders. Width/height and encoding-selector observations are documented in
+[rbm_body_encoding.md](rbm_body_encoding.md).
+
+New original `tools/rbm_body_probe.py` expands raw 16-bit mode 0 and the mode-1
+reserved-pattern repeat stream. All 33 raw and 296 mode-1 bodies match exact
+dimension-derived sample counts and input extents, permitting only required
+four-byte stream alignment in mode 1. Batch checks read 847,572 logical bytes
+and decoded 913,408 block bytes. Generated reports are local:
+`out/imrc_resource_index/rbm_pixel_probe/headers.json` and
+`validated_modes_0_1.json`. No public implementation or vendor bytes were added.
+
+The exact indexed MsgTypeIcon ID 0 body produces 225 samples/450 bytes with
+SHA-256 `89cba3b5c3c3b21aa986829e29f5dc62bc54c416d1dac848050fe08b3763510d`.
+Its explicit RGB565 candidate preview displays BCC letters; native color layout,
+orientation and transparency remain unverified. Reproduction and optional
+private-sample tests are in the linked note. Malformed synthetic tests cover
+run/extent limits and placeholder sentinels. Modes 2/5, global IDs and the host
+bitmap constructor remain unresolved.

@@ -2,7 +2,8 @@
 
 This pass establishes **path → logical offset/length → validated file** and,
 for RBM files, **path + local ID → indexed body bytes**. The application-wide
-resource-ID encoding and resource consumer remain unknown. This is a directory
+resource-ID encoding remains unknown. A subsequent [ShpApp consumer pass](shpapp_resource_consumer.md)
+connects six browser callback arguments to these local IDs. This is a directory
 model derived from the shipped sample, not a vendor format specification.
 
 Sample: `Rsrc_B5310_China.rc1`, SHA-256
@@ -97,7 +98,8 @@ For `System/Rsrc/Bmp/Black/KJava.rbm` the directory entry identifies a
 Both bodies were selected by path/local ID and exported locally at their exact
 indexed lengths. They remain encoded RBM body bytes. Dimensions, color format,
 compression, global ID composition, theme selection and the loader API are not
-established by this pass.
+established by this index pass. The subsequent [body encoding pass](rbm_body_encoding.md)
+validates a 40-byte header and mode-0/1 sample expansion for 329 other bodies.
 
 ## Reproduction and limits
 
@@ -149,8 +151,12 @@ pointer to either candidate string address was found in that bounded search.
 This establishes neither a consumer nor absence of one. No new disassembly or
 runtime evidence is claimed.
 
-Next: locate the non-cellular resource loader or host API that selects an RBM
-file/theme and supplies a local ID, then recover the global-ID composition and
-its use at an actual call site. An independent pixel-format decoder can follow
+The subsequent [browser consumer pass](shpapp_resource_consumer.md) found direct
+Thumb ADR references to `SFBrowserRsrc.rbm` and callback arguments
+20/21/22/23/24/28. It follows saved returns into drawing calls. This resolves a
+specific consumer seed without establishing the host's path/theme resolution.
+
+Next: follow that host callback or recover the bounded RBM pixel encoding.
+An independent pixel-format decoder can follow
 from one of the small, now bounded RBM bodies. Rsrc2 mapping, tail internals and
 complete library export remain outside this result.

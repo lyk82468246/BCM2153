@@ -37,6 +37,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `tools/amss_at_table_probe.py`: metadata-only probe for AMSS AT command dispatch records.
 - `tools/amss_string_xref_probe.py`: raw multi-base xref probe for selected AMSS service strings.
 - `tools/factoryfs_survey.py`: metadata-only survey for the FactoryFs FAT16 image.
+- `tools/rbm_body_probe.py`: bounded RBM mode-0/1 sample expansion and explicitly tentative RGB565 previews.
 - `tools/imrc_resource_index.py`: bounded logical directory lookup and RBM local-ID span validation.
 - `tools/imrc_bounded_decode.py`: bounded Quram IMRC block decoder with CRC-checked PNG span extraction.
 - `tests/test_imrc_bounded_decode.py`: synthetic safety regressions and optional private-sample checks.
@@ -47,6 +48,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `tools/shpapp_ghidra_import.sh`: local-only Ghidra importer for the ShpApp embedded ELF.
 - `tools/shpapp_entry_probe.py`: metadata and short disassembly probe for the ShpApp entry region.
 - `tools/ghidra_scripts/ProbeShpAppHostAbi.java`: bounded Thumb analysis of the ShpApp entry, dispatcher, and host interface registration.
+- `tools/ghidra_scripts/ProbeShpAppBrowserResources.java`: read-only Thumb probe of browser RBM selection and drawing calls.
 - `docs/firmware_facts.md`: durable facts and offsets.
 - `docs/amss_service_clues.md`: AMSS AT/USB/CAPI2/debug service string clues.
 - `docs/system_architecture.md`: current firmware architecture map.
@@ -55,6 +57,8 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `docs/bcmboot_analysis.md`: first-stage loader disassembly notes.
 - `docs/shpapp_analysis.md`: Samsung ShpApp/FimBIN native ELF notes.
 - `docs/shpapp_host_abi.md`: entry-to-dispatch flow and incoming/outgoing host interface observations.
+- `docs/shpapp_resource_consumer.md`: browser resource callback arguments and their correspondence to indexed RBM local IDs.
+- `docs/rbm_body_encoding.md`: observed body headers, placeholders, and validated mode-0/1 sample expansion.
 - `docs/imrc_resource_index.md`: verified named-file layout and RBM local indices.
 - `docs/resource_layer.md`: IMRC/ShpApp/FactoryFs resource observations.
 - `docs/factoryfs_analysis.md`: FAT16 FactoryFs directory and extension map.
