@@ -123,8 +123,9 @@ with `ProbeShpAppTransferDelivery.java` / `.class`, an absent absolute JSON
 destination and `-noanalysis -readOnly`. Report, console, independent listing
 and verification remain under `out/rea_shpapp/transfer_delivery*`.
 
-Next: lower-provider start targets `0x0e28b326` / `0x0e28b8da`, the concrete
-acquisition object and its invocation of the request-ID routing routines.
+The [lower-request follow-up](shpapp_lower_requests.md) resolves provider start,
+concrete requests and adjusted callbacks into the same constructed registry.
+Next: manager submission and acquisition calls into these request methods.
 Package-member access, installation, actual scripts/callbacks, transport,
 host events, menus, orientation, RBM mode 2, global IDs and Rsrc2 remain
 unknown. Cellular/baseband paths remain excluded.

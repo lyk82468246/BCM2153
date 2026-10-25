@@ -1266,3 +1266,38 @@ Next: concrete lower-provider acquisition and callback routing from
 scripts/callbacks, transport, host events, menus, orientation, RBM mode 2,
 global IDs and Rsrc2 remain unknown. Cellular/baseband paths remain excluded.
 Publication uses the temporary clone; original Git metadata remains stale.
+
+## 2026-10-25 Lower requests and adjusted callbacks share the frame registry
+
+Continued after pushing f2918e4. Added ProbeShpAppLowerRequests.java and
+[shpapp_lower_requests.md](shpapp_lower_requests.md). Lower providers create
+0x38-byte requests through virtual +0x28, append to their collection and start
+through request +8 -> 0x0e28af8e -> virtual +0x2c. Concrete shared/file request
+tables select 0x0e288fdc / 0x0e288db6, both entering manager getter 0x0e289d62
+and helper 0x0e28a892, with different raw return handling.
+
+Request constructor receives provider+4 as a secondary interface. Guarded
+tables resolve its response/data/completion/error/identity adjustment entries,
+subtracting four before reaching main-provider methods. Those methods enter
+the earlier request-ID routers. Newly bounded frame helper 0x0e288980 proves
+the registry at helper+4 and provider+8 is the same constructed object, through
+selector construction and its provider constructor argument. Request data
+setter/preparation and state-based notifier connect to data/complete/error
+interface slots. Concrete acquisition-side calls and response timing remain
+unknown; no request or target execution occurred.
+
+Compiled with javac -proc:none and ran Ghidra 12.1 precompiled-class headless
+-process ShpApp_embedded.elf -noanalysis -readOnly with absent absolute reports.
+Final lower_requests_retained decompiled all 34 bounded functions; all 376
+instruction addresses matched independent ARM objdump 2.45.50 Thumb listings.
+Thirty expected words, # literal, physical ELF SHA-256
+44823cc35a80acb383241589c45a2f57b808d40cb7a265fb60a0a941eedc6511
+and read-only project discard matched. Reports/console/listings/checks remain
+under out/rea_shpapp/lower_requests*. These are ordinary local observations,
+not REA Evidence. No Python implementation changed.
+
+Next: manager submission 0x0e28a892 / getter 0x0e289d62, concrete data-description
+table and acquisition calls. Package-member access, installation, actual
+scripts/callbacks, transport, host events, menus, orientation, RBM mode 2,
+global IDs and Rsrc2 remain unknown. Cellular/baseband paths remain excluded.
+Publication uses the temporary clone; original Git metadata remains stale.
