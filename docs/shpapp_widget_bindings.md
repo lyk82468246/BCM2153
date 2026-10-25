@@ -80,7 +80,9 @@ and the subsequent target from `0x0e145634(W)` are nonzero, it obtains argument 
 through conversion helper `0x0e338ff2`, and argument 0 through the string path
 `0x0e338f18`/`0x0e1b3542`. The resulting values reach `0x0e1e5f12`, followed by
 cleanup. This ordering fits event name, listener and flag from the packaged
-calls. The event registry's behavior and supported names are not established.
+calls. The [event-registry follow-up](shpapp_widget_events.md) now follows matching
+entry replacement, record construction and listener dispatch. Supported Widget
+event names, event origins and JavaScript callback invocation remain unresolved.
 
 An exact ASCII/UTF-16LE search of this ELF found no `WidgetDefault.ini`,
 `WidgetCount`, `DEFAULT_WIDGET_`, `widgetmodechange`, `widgetendkey`, or the
@@ -110,5 +112,6 @@ Evidence, and no native code ran. The loader language does not prove a CPU model
 
 Full reports, seed search and listings remain in `out/rea_shpapp/`. The preceding
 [package pass](factoryfs_widgets.md) separately retains REA JavaScript Evidence.
-Next useful targets are the event registry at `0x0e1e5f12` and the construction
-of `H`, rather than assuming the earlier graphics table implements these methods.
+The registry at `0x0e1e5f12` is partially covered by the follow-up. The construction
+of `H` remains a separate target; there is no evidence that the earlier graphics
+table implements its methods.

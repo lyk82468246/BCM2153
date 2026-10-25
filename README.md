@@ -55,6 +55,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `tools/ghidra_scripts/ProbeShpAppScreenshot.java`: read-only Thumb probe of capture, descriptor-field copies, JPEG encode and screenshot file writes.
 - `tools/ghidra_scripts/ProbeShpAppGraphics.java`: bounded graphics adapters and caller checks for coordinate and format candidates.
 - `tools/ghidra_scripts/ProbeShpAppWidgetBindings.java`: widget API name/callback records and bounded resize/direction/event adapters.
+- `tools/ghidra_scripts/ProbeShpAppWidgetEvents.java`: bounded event registration, replacement, record layout and listener-dispatch analysis.
 - `docs/firmware_facts.md`: durable facts and offsets.
 - `docs/amss_service_clues.md`: AMSS AT/USB/CAPI2/debug service string clues.
 - `docs/system_architecture.md`: current firmware architecture map.
@@ -67,6 +68,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `docs/shpapp_screenshot.md`: bounded screenshot capture/descriptor/JPEG path and its limits for RBM interpretation.
 - `docs/shpapp_graphics.md`: host drawing adapters, coordinate-offset observations and unresolved provider boundary.
 - `docs/shpapp_widget_bindings.md`: package API names linked to native argument conversion and indirect object methods.
+- `docs/shpapp_widget_events.md`: event-list record matching, replacement order and the unresolved callback/event-source boundary.
 - `docs/rbm_body_encoding.md`: observed body headers, placeholders, and validated mode-0/1 sample expansion.
 - `docs/rbm_mode2_limits.md`: mode-2 framing candidates, counterexamples and image-comparison limits.
 - `docs/imrc_resource_index.md`: verified named-file layout and RBM local indices.

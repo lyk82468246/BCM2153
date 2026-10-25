@@ -671,3 +671,35 @@ checks passed. No Python implementation changed since the 60-test successful run
 Next concrete questions: the event registry at 0x0e1e5f12 and construction of the
 nested resize/direction target object. Default-widget config lookup, mount aliases,
 RBM mode-2, global IDs, Rsrc2 and native menu ownership remain unresolved.
+
+## 2026-10-25 Widget-reachable event registration and dispatch
+
+Previous turn made progress: commits through 1338d4a were pushed and the original
+checkout matched origin/main with no working changes. This round followed the
+specific event-registry seed rather than repeating broad ShpApp analysis.
+
+Added `ProbeShpAppWidgetEvents.java`, covering eight complete Thumb functions,
+289 instructions. Ghidra 12.1 completed every bounded decompilation and discarded
+project changes; ARM objdump 2.45.50 corroborated instructions and two canonical
+name mappings. The physical ELF SHA-256 remains
+44823cc35a80acb383241589c45a2f57b808d40cb7a265fb60a0a941eedc6511.
+These are ordinary local-tool observations, not REA Evidence. Full reports remain
+in out/rea_shpapp/widget_events.*, with event_name_init.objdump.txt and
+widget_event_seed.objdump.txt. The script was verified by an actual headless run;
+no Python implementation changed since the successful 60-test run.
+
+The registry at receiver+0x298 removes the first matching name/listener/flag triple
+before appending a new 24-byte record. Name comparison is representation-pointer
+identity. Dispatch shares the backing list and filters by name, flag and a zero
+status byte, then calls listener table slot+8 with (listener,event,1). Initialization
+maps the two specially handled names to beforeunload and unload. This is a general
+document-event path reached by WidgetObject, not evidence of a dedicated
+Widget-only dispatcher or hardware event delivery. Details and limits:
+[shpapp_widget_events.md](shpapp_widget_events.md).
+
+A separate bounded horizontal/vertical literal search yielded CSS-related/data
+candidates without connecting the native direction provider. Report:
+out/rea_shpapp/direction_name_seeds.json. It does not prove provider absence.
+Next: trace the listener object's implementation from the known wrapper factory,
+or callers of dispatch, before claiming a script callback invocation. Window
+receiver construction remains separate; cellular/baseband paths remain excluded.
