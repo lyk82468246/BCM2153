@@ -808,3 +808,39 @@ Next: upstream object/provider ownership for the name bridge or the geometry
 call at 0x0e28cd78. Document-receiver identity, actual custom widget event names,
 direction provider, RBM mode 2, global resource IDs and Rsrc2 remain unresolved.
 Cellular/baseband paths remain excluded.
+
+## 2026-10-25 Registered control factory and bridge ownership
+
+Previous goal turn made concrete progress: commits through f4eb79b were pushed,
+and the original checkout was clean at that commit. Continued from the known
+geometry call at 0x0e28cd78. Its initializer also constructs the incoming-name
+bridge, so the two preceding native paths share an owning control object.
+
+Added ProbeShpAppControlFactory.java and
+[shpapp_control_factory.md](shpapp_control_factory.md). The factory entry
+0x0e28d790 is installed at outgoing registered table B+0x34 through literal
+0x0e00ac44. It calls a lower factory that allocates 0x128 bytes and compares
+Browser/Widget/Messenger, storing category byte 0/1/2 or default 3 at +0x28.
+After subordinate setup, initialization calls the known geometry function and
+constructs the event-name bridge at control+0x7c. The final control table's
+slot+0x20 returns that bridge; bridge slot+0x128 is the previously verified
+incoming-name method. Host invocations, concrete names, package launch and event
+delivery remain unknown. This is shared control setup, not a Widget-only path.
+
+Compiled with javac -proc:none against installed Ghidra jars, then ran the
+supported precompiled-class headless route with -noanalysis -readOnly. All six
+functions decompiled, 413 instruction addresses matched bounded ARM objdump
+2.45.50 output. Physical ELF SHA-256 remains
+44823cc35a80acb383241589c45a2f57b808d40cb7a265fb60a0a941eedc6511;
+five pointer words, three literal strings and read-only discard were checked.
+The initializer and outer factory use explicit islands excluding literal pools.
+Supplemental registration and ARM string-comparator listings stay local; the
+ARMv5T decoder choice is not CPU-model evidence. These are ordinary Ghidra 12.1/
+objdump observations, not REA Evidence. Full outputs/checks are under
+out/rea_shpapp/control_factory.*. No Python implementation changed since the
+successful 60-test run. Compilation and final whitespace checks passed.
+
+Next: subordinate provider construction at control+0x30 or external host use of
+the exposed bridge. Document-receiver identity, custom widget event values,
+physical orientation, main-menu ownership, RBM mode 2, global IDs and Rsrc2 stay
+unresolved. Cellular/baseband paths remain excluded.

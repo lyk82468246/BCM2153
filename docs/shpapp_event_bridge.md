@@ -89,7 +89,8 @@ reports are ignored under `out/rea_shpapp/event_bridge.*`; the instruction/hash
 checks are in `event_bridge.verification.json`. Candidate searches are retained
 in `event_host_forward_candidates.json` and are separate from validated ranges.
 
-Next: object/provider construction above the name-forwarding table or the caller
-of `0x0e28ea42` at `0x0e28cd78`. The event-list receiver identity, custom widget
+The subsequent [control-factory probe](shpapp_control_factory.md) resolves the
+owner above the name-forwarding table and the initialization call at `0x0e28cd78`.
+Provider construction and external host use remain open. The event-list receiver identity, custom widget
 event values, window-direction provider, RBM mode 2, global IDs and Rsrc2 remain
 unknown. Cellular/baseband paths remain excluded.

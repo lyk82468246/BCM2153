@@ -132,7 +132,9 @@ word at `+0x308` is divided by eight in a capacity-check candidate. The
 implementations behind all these incoming callbacks remain unknown.
 
 1. Which loader constructs `C`, and which functions fill these incoming tables?
-2. What are the registration constants and all 20 outgoing methods?
+2. What are the registration constants and all 20 outgoing methods? The
+   subsequent [control-factory pass](shpapp_control_factory.md) resolves slot
+   `+0x34` into named control creation and a returned event-name bridge.
 3. Who invokes the returned dispatcher, with which event values and arguments?
 4. What calls `0x0e00ad30`, and what do its three non-logging callbacks do?
 5. Which module owns the native menu and main input loop? These WebKit paths
