@@ -119,8 +119,10 @@ and `-noanalysis -readOnly`. Final report/console are
 `out/rea_shpapp/script_resource.objdump.txt` and
 `out/rea_shpapp/script_resource.verification.json`.
 
-Next: follow service `0x0e16a260` into concrete providers and trace the calls
-that supply the accepted buffer. Package-member acquisition, installation,
+The [service follow-up](shpapp_resource_service.md) resolves queue selection,
+transfer construction and the constructed frame-provider dispatch target.
+Next: trace the provider's bridge and calls supplying the accepted buffer.
+Package-member acquisition, installation,
 actual script/callback execution, transport, host event values, menus,
 orientation, RBM mode 2, global IDs and Rsrc2 remain unknown. Cellular/baseband
 paths remain excluded.

@@ -65,6 +65,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `tools/ghidra_scripts/ProbeShpAppScriptRegistry.java`: initialized HTML names and concrete script attribute interface slots.
 - `tools/ghidra_scripts/ProbeShpAppScriptRequest.java`: script src routing, document resource-loader ownership and shared request manager.
 - `tools/ghidra_scripts/ProbeShpAppScriptResource.java`: class-2 construction, byte/text storage, resource clients and loading-service entry.
+- `tools/ghidra_scripts/ProbeShpAppResourceService.java`: resource queues, transfer construction and the frame's constructed request-provider bridge.
 - `docs/firmware_facts.md`: durable facts and offsets.
 - `docs/amss_service_clues.md`: AMSS AT/USB/CAPI2/debug service string clues.
 - `docs/system_architecture.md`: current firmware architecture map.
@@ -90,6 +91,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `docs/shpapp_script_registry.md`: initialized script/src/charset/type/language names and their concrete owner interface slots.
 - `docs/shpapp_script_request.md`: src selection/update paths into a document-owned resource loader and shared manager.
 - `docs/shpapp_script_resource.md`: class-2 resource construction and accepted bytes linked through client completion to script input.
+- `docs/shpapp_resource_service.md`: resource queue selection, transfer start and concrete frame-provider dispatch target.
 - `docs/rbm_body_encoding.md`: observed body headers, placeholders, and validated mode-0/1 sample expansion.
 - `docs/rbm_mode2_limits.md`: mode-2 framing candidates, counterexamples and image-comparison limits.
 - `docs/imrc_resource_index.md`: verified named-file layout and RBM local indices.

@@ -1148,3 +1148,45 @@ menus, orientation, RBM mode 2, global IDs and Rsrc2 remain unknown.
 Cellular/baseband paths remain excluded. Publication uses the clean temporary
 clone; original Git metadata remains stale after the previously recorded
 approval-review timeouts.
+
+## 2026-10-25 Loading queues and constructed frame-provider handoff
+
+Continued after pushing 1d05c7a. Added ProbeShpAppResourceService.java and
+[shpapp_resource_service.md](shpapp_resource_service.md). Manager constructor
+embeds service B=M+0x20. Loading entry allocates a 28-byte job with resource Z,
+document resource loader R and flag bytes, checks http/https scheme spans,
+selects a derived-key queue or generic B+0x1c queue, and appends at constant
+priority 2. Queue drain prepares the request and calls 0x0e16cd26 to construct
+a 0x268-byte transfer T. Its constructed +0x40 method reaches 0x0e16cffa then
+0x0e16c554; conditional error/saved-request paths remain explicit.
+
+Corrected a preliminary page/provider association while checking register
+loads: transfer T+0x18 is W, so the start provider is
+N=read32(read32(W+0x18)+8), distinct from page-like H=read32(K). H supplies
+separate creator gates. Frame constructor's fifth argument is N from the
+existing provider initializer. Newly bounded bridge 0x0e1a2aec stores W at V+4
+and N at V+8, with V installed at W+0x18. N constructor 0x0e288668 installs
+0x0e58a764, whose +0x0c resolves to 0x0e2887d8. This converts the request and
+calls 0x0e288b4c, which reaches 0x0e28b5b6 and conditionally 0x0e28b120.
+Actual provider return, callback byte delivery and package access remain
+unknown. The creator's file scheme branch is only a gate, not proof of file I/O.
+
+Compiled with javac -proc:none and ran Ghidra 12.1 precompiled-class headless
+analysis using -process ShpApp_embedded.elf -noanalysis -readOnly and absent
+absolute JSON outputs. After extending to frame/provider construction and
+dispatch, final source ran as resource_service_provider. All twenty-two
+functions decompiled; all 1,444 instruction addresses matched independent
+bounded ARM objdump 2.45.50 Thumb listings. Fifteen expected words, four
+ASCII literals, physical ELF SHA-256
+44823cc35a80acb383241589c45a2f57b808d40cb7a265fb60a0a941eedc6511
+and read-only project discard matched. Reports, console, bounded listings and
+checks remain under out/rea_shpapp/resource_service*. These are ordinary local
+observations, not REA Evidence or target execution. No Python implementation
+changed; original Java compiles and whitespace checks pass.
+
+Next: 0x0e28b5b6 / 0x0e28b120 and callback buffer delivery. Concrete transport,
+package-member acquisition, installation, actual scripts/callbacks, host events,
+menus, orientation, RBM mode 2, global IDs and Rsrc2 remain unknown.
+Cellular/baseband paths remain excluded. Publication uses the temporary clone;
+original Git metadata remains stale after the previously recorded approval
+review timeouts.
