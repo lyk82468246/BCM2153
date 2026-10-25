@@ -100,8 +100,9 @@ adjustment table above to the registry and wrapper. The
 [transfer-delivery report](shpapp_transfer_delivery.md) already connects that
 wrapper's calls to resource acceptance/error and cached script input.
 
-The response slot is also resolved, but its acquisition-side call sites and
-the manager's actual calls into these notification methods remain unproved.
+The [acquisition callback follow-up](shpapp_acquisition_callbacks.md) connects
+header/data/completion/error calls to these concrete request slots and resolves
+the shared response notification; the file response slot is a no-op.
 Static notification paths do not establish callback timing or actual bytes.
 
 ## Reproduce and next boundary
@@ -114,7 +115,8 @@ verification use `lower_requests.objdump.txt` and `lower_requests.verification.j
 
 The [request-manager follow-up](shpapp_request_manager.md) resolves manager
 submission/pending handling, acquisition's callback structure and the
-data-description pointer/length methods. Next: inline data delivery and
-concrete acquisition callbacks. Package-member access, installation, actual
-scripts/callbacks, transport, host events, menus, orientation, RBM mode 2,
+data-description pointer/length methods. The [callback follow-up](shpapp_acquisition_callbacks.md)
+resolves inline data preparation and concrete request notification calls.
+Next: the lower acquisition handoff at `0x0e02fbb2`. Package-member access,
+installation, actual scripts/callbacks, transport, host events, menus, orientation, RBM mode 2,
 global IDs and Rsrc2 remain unknown. Cellular/baseband paths remain excluded.

@@ -55,9 +55,10 @@ Complete cancellation/ownership and synchronization contracts remain unknown.
 ## Acquisition builds parameters and a concrete callback table
 
 Acquire **`0x0e28a4ea`** derives the same name component. A `data` match calls
-`0x0e28a18e(Mgr,L)` and returns 1. That callee remains outside the stable probe;
-candidate literals and calls suggest inline data handling, but decoding and
-delivery are not yet established.
+`0x0e28a18e(Mgr,L)` and returns 1. The
+[follow-up](shpapp_acquisition_callbacks.md) bounds that callee and connects
+synthetic header creation and payload delivery to concrete request
+slots; transformation helpers remain unresolved.
 
 Other names allocate a 0x38-byte parameter object P, copy text from converted
 request+0x1c/+0x24, copy request+0x50 to P+0x2c, and map request byte +0x36
@@ -95,8 +96,9 @@ the handle differs from -1. Whether the callee copies structures, invokes
 callbacks synchronously or retains any pointers remains unknown. No transport
 ABI or safe lifetime reconstruction follows merely from these calls.
 
-The concrete callback bodies, especially `0x0e289050` / `0x0e289196` /
-`0x0e2896cc`, and the `data` branch are the next boundary. A separate
+The [callback follow-up](shpapp_acquisition_callbacks.md) resolves
+`0x0e28944a`, `0x0e289050`, `0x0e289196`, `0x0e2896cc` and the inline
+`data` handoff to concrete request slots. A separate
 control getter `0x0e28aa56` follows converted request+0x60 and invokes its
 virtual +0x9c; the control's complete type is unresolved.
 
@@ -117,7 +119,10 @@ with `ProbeShpAppRequestManager.java` / `.class`, an absent absolute JSON path
 and `-noanalysis -readOnly`. Report, console, listing and independent verification
 remain under `out/rea_shpapp/request_manager*`.
 
-Next: inline data delivery, concrete acquisition callbacks and the semantics
-of `0x0e02fbb2`. Package-member access, installation, actual scripts/callbacks,
+The [acquisition callback follow-up](shpapp_acquisition_callbacks.md) bounds
+the header/data/error and inline `data:` paths. It shows local
+header parsing, bounded callback handoff and `data:` conversion, while leaving
+the lower helper `0x0e02fbb2`, callback timing and provider return values
+unresolved. Package-member access, installation, actual scripts/callbacks,
 transport, host events, menus, orientation, RBM mode 2, global IDs and Rsrc2
 remain unknown. Cellular/baseband paths remain excluded.

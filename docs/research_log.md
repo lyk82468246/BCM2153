@@ -1335,3 +1335,46 @@ table and acquisition calls. Package-member access, installation, actual
 scripts/callbacks, transport, host events, menus, orientation, RBM mode 2,
 global IDs and Rsrc2 remain unknown. Cellular/baseband paths remain excluded.
 Publication uses the temporary clone; original Git metadata remains stale.
+
+## 2026-10-25 Acquisition callbacks and synthetic inline-data headers
+
+Continued after pushing b29a7e8. Added original
+ProbeShpAppAcquisitionCallbacks.java and
+[shpapp_acquisition_callbacks.md](shpapp_acquisition_callbacks.md). Acquisition
+C+0 splits headers and enters the line parser; C+4 passes data and conditionally
+completion; C+8 reports errors. Guarded shared/file request tables connect
+response/data/complete/error slots to the already verified provider registry.
+Shared response notifies I+0; file response is a no-op. The getter at
+0x0e31ba9c obtains response O through H+8, while release 0x0e31baa4 decrements
+L+0x20 and can dispatch destruction. Data/response callbacks preserve the
+L+0x24 byte before releasing a temporary lifetime reference.
+
+The inline data path constructs a Content-Type line and CR/LF with status 200;
+these two parser calls are synthetic headers, not payload delivery. Subsequent
+data callback receives the converted payload or the marker-selected helper's
+output pointer/length, with final flag 1; the predicate error branch reports
+0x7a. Base64 marker recognition is observed, but expansion helper correctness,
+URI transformation and malformed-input handling remain unknown.
+
+Compiled with javac -proc:none against installed Ghidra jars. Ran Ghidra 12.1
+analyzeHeadless -process ShpApp_embedded.elf -noanalysis -readOnly using the
+precompiled class and absent absolute JSON path. Final retained report bounds
+11 functions; all decompiled and all 1,008 instruction addresses matched
+independent bounded arm-none-eabi-objdump 2.45.50 force-thumb listings. Thirteen
+words, 17 literal locations, physical ELF SHA-256
+44823cc35a80acb383241589c45a2f57b808d40cb7a265fb60a0a941eedc6511
+and read-only project discard matched. Explicit seeds cover two branch stubs
+without normal-entry flow; literal pools are excluded. Final local report and
+console are acquisition_callbacks_retained.*; verifier, listing and result
+remain in out/rea_shpapp/. Earlier four-function reports are superseded: the
+header parser range originally omitted its two-instruction epilogue. The final
+report includes it. These are ordinary observations, not REA Evidence. No Python
+implementation changed; the local verifier was extended for words/literals.
+
+Next: lower 0x0e02fbb2 across its literal pools, with callback structure copying,
+external timing and parameter ownership unresolved. Package-member access,
+FactoryFs, installation, actual scripts/callbacks, transport, host events,
+menus, orientation, RBM mode 2, global IDs and Rsrc2 remain unknown. Cellular,
+AMSS, RF, SIM and baseband paths remain excluded. The missing temporary
+publishing clone was restored as /tmp/bcm2153-publish-20261025/repo and remote
+main rechecked at b29a7e8. Original Git metadata remains stale.
