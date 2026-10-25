@@ -1105,3 +1105,46 @@ delivery, transport, host event values, native menus, physical orientation,
 RBM mode 2, global IDs and Rsrc2 remain unknown. Cellular/baseband paths remain
 excluded. Publication still uses the clean temporary clone because original
 Git metadata synchronization previously timed out in automatic approval review.
+
+## 2026-10-25 Script resource construction, bytes and completion
+
+Continued after pushing da144d1. Added ProbeShpAppScriptResource.java and
+[shpapp_script_resource.md](shpapp_script_resource.md). Explicit ARM switch
+helper plus guarded inline table resolve class 2 to 0x0e15b714, allocating
+0x1b0 bytes and calling 0x0e15e130. The raw Thumb return address is 0x0e15b6ef,
+not its even instruction address: count is at LR-1, offsets start at LR.
+Class 2's offset 0x13 gives raw 0x0e15b715. Early factory-prefix pseudocode
+incorrectly traversed inline bytes; final source skips decompilation for the
+two partial factory slices and uses independently checked instruction flow.
+
+The constructor installs 0x0e595514. Table +8 starts loading through
+0x0e32bd98 -> 0x0e15d842 -> 0x0e16a260(M+0x20,R,Z,0,0,1). Table +0x1c
+registers clients; byte acceptance moves buffer ownership to Z+0xd8, updates
+Z+0xe8, clears pending and notifies surviving snapshot clients. X+0x1c resolves
+to the previously bounded 0x0e1f97e2 completion handler. Resource error entry
+sets Z+0xe2 and uses the same notification path. Cached input retains Z at
+source+0x14 through bounded pointer/reference helpers; length/data methods
+obtain decoded text lazily from Z+0xd8/Z+0xe8 using charset object Z+0x158.
+This connects accepted bytes to the existing evaluation input statically.
+Actual byte acquisition and script execution remain unknown. The earlier
+0x0e15b6bc scheduling candidate is corrected to cache counter/list bookkeeping.
+
+Compiled with javac -proc:none and ran Ghidra 12.1 precompiled-class headless
+analysis with -process ShpApp_embedded.elf -noanalysis -readOnly and absent
+absolute output paths. After adding client snapshot and retained-resource
+helpers, final source ran as script_resource_retained. Twenty-two functions
+decompiled; two slices intentionally disassembly-only. All 747 instruction
+addresses matched bounded ARM objdump 2.45.50 output: explicit ARM helper,
+Thumb elsewhere. Fourteen words, six computed switch routes, physical ELF
+SHA-256 44823cc35a80acb383241589c45a2f57b808d40cb7a265fb60a0a941eedc6511
+and read-only project discard matched. Full reports/listings/checks remain
+under out/rea_shpapp/script_resource*. These are ordinary local observations,
+not REA Evidence or target execution. No Python implementation changed; Java
+compilation and whitespace checks pass.
+
+Next: loading service 0x0e16a260 and concrete buffer providers. Package-member
+acquisition, installation, actual scripts/callbacks, transport, host events,
+menus, orientation, RBM mode 2, global IDs and Rsrc2 remain unknown.
+Cellular/baseband paths remain excluded. Publication uses the clean temporary
+clone; original Git metadata remains stale after the previously recorded
+approval-review timeouts.

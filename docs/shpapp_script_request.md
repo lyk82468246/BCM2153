@@ -96,8 +96,10 @@ lookup `0x0e15b8fa`, applies additional gates, and either reuses an object or
 calls `0x0e15b6de(2,&U,charset)` to construct one. The selected object must have
 byte +0xe0 equal to class 2. It can be inserted into M+0x22c; dispatcher-level
 tracking uses R+0x1c. A newly constructed object receives selected_R through
-its virtual +8 method. The next scheduler/helper `0x0e15b6bc`, class factory,
-transport callbacks and concrete bytes remain outside this probe.
+its virtual +8 method. The [resource follow-up](shpapp_script_resource.md)
+resolves class-2 construction and this method's loading-service call. It also
+corrects the scheduling candidate: `0x0e15b6bc` performs cache counter/list
+bookkeeping. Concrete byte acquisition remains unknown.
 
 ## Reproduce and next boundary
 
@@ -108,8 +110,8 @@ and `-noanalysis -readOnly`. Final report/console use
 `out/rea_shpapp/script_request.objdump.txt` and
 `out/rea_shpapp/script_request.verification.json`.
 
-Next: resolve class-2 resource construction and the manager's scheduling path,
-then test whether any concrete package-member provider can supply the bytes.
+Next: follow the loading service into concrete providers and determine whether
+a package-member provider can supply the bytes.
 Actual installed-widget execution, callback delivery, transport, host event
 values, menus, orientation, RBM mode 2, global resource IDs and Rsrc2 remain
 unknown. Cellular/baseband paths remain excluded.

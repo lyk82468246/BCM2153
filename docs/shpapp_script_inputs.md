@@ -92,8 +92,10 @@ Completion entry `0x0e1f97e2(X,resource)` sets X+0x13. It checks resource byte
 +0xe2. On the clear branch it calls `0x0e32e380(&input,resource)`, which forwards
 to `0x0e32782c` and the span-copy helper, then calls the common evaluator and
 I slot +0x1c. The other branch calls I slot +0x20. Both perform cleanup.
-Resource success/error names are interpretations of these branches; transport,
-cache contents and the full completion-registration mechanism are not recovered.
+Resource success/error names are interpretations of these branches. The
+[resource follow-up](shpapp_script_resource.md) resolves class-2 construction,
+registration/notification slots and cached text access. Transport and concrete
+cache contents remain unknown.
 The completion function includes the shared return island
 `[0x0e1f97de,0x0e1f97e2)` and excludes adjacent hash/literal data.
 
@@ -115,8 +117,8 @@ with `ProbeShpAppScriptInputs.java` / `.class`, an absent absolute output path,
 and `-noanalysis -readOnly`. Reports, bounded listings and verification remain
 in ignored `out/rea_shpapp/script_inputs.*`.
 
-The request follow-up connects src to the request manager. Next: follow resource
-construction/scheduling and package-member loading. Actual installed-widget execution,
+The request and resource follow-ups connect src, accepted bytes and cached input.
+Next: loading-service providers and package-member acquisition. Actual installed-widget execution,
 callback delivery, host event values, native-menu ownership, physical
 orientation, RBM mode 2, global IDs and Rsrc2 remain unknown. Cellular/baseband
 paths remain excluded.
