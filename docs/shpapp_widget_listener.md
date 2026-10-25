@@ -153,8 +153,9 @@ outputs and failed-attempt logs remain ignored in `out/`; validated reports are
 `widget_listener.ghidra.json`, `widget_listener_class_verified.console.log`,
 `widget_listener.objdump.txt`, `.provenance.json`, and `.verification.json`.
 
-The next concrete boundary is event production and callers of the known native
-dispatch path. Exact ASCII searches found neither `widgetmodechange` nor
+The subsequent [event-source probe](shpapp_event_sources.md) identifies bounded
+resize/focus/blur and beforeunload producers, with document-receiver identity and
+upstream triggers still unresolved. Exact ASCII searches found neither `widgetmodechange` nor
 `widgetendkey` in this ELF; that does not rule out host-supplied or dynamically
 constructed names. Packaged callback execution, receiver/provider construction,
 default-widget installation, RBM mode 2, global resource IDs and Rsrc2 remain

@@ -740,3 +740,37 @@ this ELF; this does not exclude dynamically supplied names. Next: callers of
 the native event path and event production, or the separate window-provider
 construction. Global resource IDs, RBM mode 2, Rsrc2 and default-widget installer
 mapping remain unresolved. Cellular/baseband paths remain excluded.
+
+## 2026-10-25 Named-event sources and receiver boundary
+
+Listener-wrapper commit 03cacc7 was pushed, and all publication files were
+compared byte-for-byte before aligning original-checkout metadata. Continued
+from five candidate direct calls to 0x0e1e5d76 found in the full forced-Thumb
+listing. Three sites were validated within complete bounded functions here;
+the other two remain seeds in a larger propagation routine, not a full call graph.
+
+Added ProbeShpAppEventSources.java and
+[shpapp_event_sources.md](shpapp_event_sources.md). The canonical-name initializer
+maps resize/focus/blur; native producers construct those named events. Another
+producer constructs beforeunload and directly calls the known dispatcher.
+The generic named-event path allocates a 56-byte event, assigns a target and
+calls stored-flag group 1 then 0. Its registry receiver is read32(T+0x10), whose
+equality to the Widget registration receiver remains unproven. Actual hardware
+triggers, custom widget event delivery and execution remain unknown.
+
+Used javac -proc:none against installed Ghidra jars and the supported .class
+headless route documented in the listener report. Added literal-byte checks
+after the initial run, then recompiled/reran the final source with a fresh report
+destination. All nine functions decompiled, 405 instruction addresses matched
+bounded ARM objdump, and read-only project changes were discarded. Input physical
+SHA-256 remains 44823cc35a80acb383241589c45a2f57b808d40cb7a265fb60a0a941eedc6511.
+Two functions include explicit shared-epilogue islands. These are ordinary
+Ghidra 12.1/objdump 2.45.50 observations, not REA Evidence. Full reports/listings
+and verification stay in out/rea_shpapp/event_sources*. Source compilation and
+whitespace checks passed; no Python implementation changed since the 60-test run.
+
+Next: upstream caller/host exposure of 0x0e13ff96's generic name forwarder,
+document-receiver construction, or callers of the resize producer. Do not equate
+resize with physical orientation or focus/blur with a demonstrated keyboard
+event. Global resource IDs, RBM mode 2, Rsrc2 and default-widget installation
+remain unknown. Cellular/baseband research remains excluded.
