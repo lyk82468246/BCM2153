@@ -844,3 +844,40 @@ Next: subordinate provider construction at control+0x30 or external host use of
 the exposed bridge. Document-receiver identity, custom widget event values,
 physical orientation, main-menu ownership, RBM mode 2, global IDs and Rsrc2 stay
 unresolved. Cellular/baseband paths remain excluded.
+
+## 2026-10-25 Control provider and document pointer storage
+
+Continued after pushed commit b07cf7d with the original checkout clean. Added
+ProbeShpAppControlProvider.java and
+[shpapp_control_provider.md](shpapp_control_provider.md). The control's +0x30
+provider is a 16-byte allocation; its +4 word holds a 0x98-byte object W used by
+the established bridge/geometry paths. W+0x10 points to a 0x738-byte backing
+structure K. Accessor 0x0e145634 returns read32(K+0x464), the document receiver
+used by Widget registration. Its constructor clears this field. A clear at one
+construction site does not prove it stays null through subsequent helper calls.
+
+Provider initialization creates the geometry object, binds W+0x88 to the owning
+control, and installs geometry at K+0x460. This resolves the static provider
+relationship; it does not connect a particular script context to this W or prove
+that generic dispatch's read32(D+0x10) equals registration receiver D. Document
+assignment, actual host event values and callback execution remain unknown.
+
+Compiled the new source using javac -proc:none against installed Ghidra jars;
+ran analyzeHeadless with -process ShpApp_embedded.elf -noanalysis -readOnly,
+-scriptPath out/ghidra_listener_scripts and -postScript
+ProbeShpAppControlProvider.class with an absent absolute JSON destination.
+All eleven functions decompiled, 458 instruction addresses matched independent
+bounded ARM objdump 2.45.50 output. Two expected words and physical ELF SHA-256
+44823cc35a80acb383241589c45a2f57b808d40cb7a265fb60a0a941eedc6511
+matched; the console confirmed read-only project changes were discarded.
+These are ordinary Ghidra 12.1/objdump observations, not REA Evidence. Full
+reports and verification stay in out/rea_shpapp/control_provider.*. A bounded
+literal-reference candidate search stays local in frame_document_field_candidates.json;
+it does not enumerate all document writers. No Python implementation changed
+since the successful 60-test run. Source compilation and whitespace checks pass.
+
+Next: follow backing area K+0x28 through initialization 0x0e16064a and start
+0x0e164626 to document construction/assignment, then verify the document's
++0x10 field. Global resource IDs, RBM mode 2, Rsrc2, default-widget installation,
+physical orientation and native-menu ownership remain unknown. Cellular/baseband
+research remains excluded.

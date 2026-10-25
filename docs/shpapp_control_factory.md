@@ -130,7 +130,9 @@ Keep `-noanalysis -readOnly`. Local reports are
 `webcontrol_init_candidates.json`, `webcontrol_factory_candidates.json`, and
 `webcontrol_expose_candidates.json`; they are not complete call graphs.
 
-Next: provider construction behind control `+0x30`, or how the external host
-uses the exposed name bridge. A physical orientation change, native main-menu
+The subsequent [provider probe](shpapp_control_provider.md) resolves control
+`+0x30` construction and the frame/geometry fields. Document construction and
+how the external host uses the exposed name bridge remain open. A physical
+orientation change, native main-menu
 ownership, RBM mode 2, global IDs and Rsrc2 remain unresolved. Cellular/baseband
 paths remain excluded.

@@ -60,6 +60,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `tools/ghidra_scripts/ProbeShpAppEventSources.java`: bounded named-event construction, resize/focus/blur sources and beforeunload dispatch.
 - `tools/ghidra_scripts/ProbeShpAppEventBridge.java`: constructed name-forwarding table slot and geometry-to-resize graphics path.
 - `tools/ghidra_scripts/ProbeShpAppControlFactory.java`: registered creation entry, named control categories and ownership of geometry/event bridges.
+- `tools/ghidra_scripts/ProbeShpAppControlProvider.java`: provider/frame construction, geometry installation and document receiver storage.
 - `docs/firmware_facts.md`: durable facts and offsets.
 - `docs/amss_service_clues.md`: AMSS AT/USB/CAPI2/debug service string clues.
 - `docs/system_architecture.md`: current firmware architecture map.
@@ -77,6 +78,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `docs/shpapp_event_sources.md`: named-event producers, two dispatch flag groups and unresolved document-receiver identity.
 - `docs/shpapp_event_bridge.md`: incoming-name forwarding and a bounded graphics/geometry update that reaches resize.
 - `docs/shpapp_control_factory.md`: outgoing factory slot, Browser/Widget/Messenger category byte and exposed event-name bridge.
+- `docs/shpapp_control_provider.md`: provider ownership, frame backing fields and the remaining document-construction boundary.
 - `docs/rbm_body_encoding.md`: observed body headers, placeholders, and validated mode-0/1 sample expansion.
 - `docs/rbm_mode2_limits.md`: mode-2 framing candidates, counterexamples and image-comparison limits.
 - `docs/imrc_resource_index.md`: verified named-file layout and RBM local indices.
