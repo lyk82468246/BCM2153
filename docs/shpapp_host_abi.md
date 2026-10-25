@@ -124,6 +124,13 @@ returned-object `+8/+0xc` fields copied into an image descriptor before a JPEG
 encoder call. It strengthens their dimension-like interpretation while leaving
 the host object type and allocator unresolved.
 
+The [graphics-adapter pass](shpapp_graphics.md) follows eight small wrappers
+through the `+0xe4` interface and two complete callers. Host slot `+0xb0`
+returns an object whose `+0x34/+0x38` words are added to layout coordinates;
+these must remain distinct from the bitmap-like `+8/+0xc` fields. Another
+word at `+0x308` is divided by eight in a capacity-check candidate. The
+implementations behind all these incoming callbacks remain unknown.
+
 1. Which loader constructs `C`, and which functions fill these incoming tables?
 2. What are the registration constants and all 20 outgoing methods?
 3. Who invokes the returned dispatcher, with which event values and arguments?

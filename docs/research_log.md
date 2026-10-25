@@ -574,3 +574,30 @@ Parent/ELF hashes remain unchanged. Local report:
 `out/rea_shpapp/screenshot_prefix.objdump.txt`. The mode-2 candidate remains
 unresolved; the next native question is the implementation behind context
 `+0x23c/+0x18` or `+0xe4/+0x18c` resource/bitmap callbacks.
+
+## 2026-10-25 Graphics adapters and host boundary
+
+The preceding screenshot commit `0681be1` was successfully published after the
+user renewed the push instruction: Git reported `7178565..0681be1 main -> main`.
+This supersedes the earlier pending-publication notes.
+
+A new hash-guarded read-only `ProbeShpAppGraphics.java` covers eight Thumb
+adapters and two complete callers. Ghidra 12.1 decoded 203 instructions and
+completed all ten decompilations, then discarded changes. ARM objdump 2.45.50
+corroborates the bounded instructions; full raw listings and pseudocode remain
+ignored under `out/rea_shpapp/`. This is ordinary Ghidra evidence, not REA Evidence.
+Parent/ELF hashes and the ELF-to-parent mapping remain unchanged.
+
+The wrappers identify host graphics slots `+0x3b4`, `+0xb0`, `+0x38`, `+0x3d0`,
+`+0x3dc`, and `+0x3e0` at context `+0xe4`. Caller arithmetic supports coordinate
+roles for the object words `+0x34/+0x38`; a separate `+0x308` word is divided by
+eight and multiplied by a dimensions-product candidate in a capacity comparison.
+Register tracing corrects omitted arguments/returns in untyped tail-call
+pseudocode. Acquisition, commit/end, rectangle operation and bit depth remain
+candidate semantics. No host callback body or RBM mode-2 decoder was found in
+these ranges. Details, boundaries and reproduction command are in
+[shpapp_graphics.md](shpapp_graphics.md).
+
+Next independent question: inspect package metadata and entry paths in the three
+FactoryFs widget packages, without running their content. Full host-table
+providers, mode-2 semantics, global resource IDs and Rsrc2 remain explicit gaps.
