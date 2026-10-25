@@ -638,3 +638,36 @@ API dependencies. No browser was launched, no widget executed, no network endpoi
 contacted. Native binding providers, installer, mount aliases and main-menu
 ownership remain unresolved. Next: use exact default-widget/API-name seeds to
 locate a native consumer, or establish the boundary where this ELF lacks one.
+
+## 2026-10-25 WidgetObject native callback records
+
+Widget package commit `80d484b` was pushed successfully
+(`3f7ea50..80d484b main -> main`). Exact package API-name searches then found
+ShpApp ASCII strings with raw pointer candidates in ten contiguous 16-byte
+records at `0x0e532754..0x0e5327f4`. Name/callback pairs include resizeWindow,
+getCurrentDirection, addEventListener and preference accessors. A nearby descriptor
+names widget; diagnostic paths name runtime/WidgetObject.cpp. Record flags,
+lookup/registration mechanics and final indirect target providers remain unknown.
+
+Added hash-guarded read-only `ProbeShpAppWidgetBindings.java`, recording the ten
+records and six bounded Thumb callbacks/helpers. Ghidra 12.1 completed all six
+decompilations (198 instructions), discarded changes; ARM objdump independently
+corroborated the instruction sequences. The physical ELF hash still matches the
+project's documented digest. Report/console/listings remain under
+`out/rea_shpapp/widget_bindings.*`; exact seed search is `widget_name_seeds.json`.
+This is ordinary Ghidra evidence, separate from the preceding package REA bundle.
+
+The resize callback selects argument indices 0/1, converts them and dispatches
+through an object's +0x20 method; direction uses +0x54 and a string/release path.
+Event registration selects argument 1 as a callback candidate, 2 as a flag and
+0 through a string path, then calls 0x0e1e5f12. These are observed data flows,
+not execution or full ABI recovery. The indirect object comes through a nested
+WidgetObject chain, not the saved graphics context +0xe4. Do not assume their
+providers or calling contracts coincide. Details and commands:
+[shpapp_widget_bindings.md](shpapp_widget_bindings.md).
+
+The six Ghidra runs and all ten record values passed report checks; diff whitespace
+checks passed. No Python implementation changed since the 60-test successful run.
+Next concrete questions: the event registry at 0x0e1e5f12 and construction of the
+nested resize/direction target object. Default-widget config lookup, mount aliases,
+RBM mode-2, global IDs, Rsrc2 and native menu ownership remain unresolved.

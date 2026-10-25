@@ -115,8 +115,10 @@ files, executes no handlers and refuses to overwrite reports. Tests cover these
 boundaries and base-element uncertainty. Package scripts and full manifests
 remain ignored under `out/`.
 
-Next: trace the native consumers of the default-widget configuration and the
-window/event API names, keeping Widget lifecycle separate from browser drawing
-and native-menu ownership. The two bookmark ZIP templates are a separate lead:
+The [native binding follow-up](shpapp_widget_bindings.md) links window/event API
+names to native callback records and follows three adapters. The configuration
+consumer, final method targets and event delivery remain unresolved. Widget
+lifecycle remains separate from browser drawing and native-menu ownership.
+The two bookmark ZIP templates are a separate lead:
 their HTML references files absent from the stored templates, so an installation
 or generation step would be needed before treating them as complete widgets.
