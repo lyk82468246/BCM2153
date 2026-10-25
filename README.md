@@ -58,6 +58,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `tools/ghidra_scripts/ProbeShpAppWidgetEvents.java`: bounded event registration, replacement, record layout and listener-dispatch analysis.
 - `tools/ghidra_scripts/ProbeShpAppWidgetListener.java`: bounded listener construction, virtual-table resolution and script-call bridge analysis.
 - `tools/ghidra_scripts/ProbeShpAppEventSources.java`: bounded named-event construction, resize/focus/blur sources and beforeunload dispatch.
+- `tools/ghidra_scripts/ProbeShpAppEventBridge.java`: constructed name-forwarding table slot and geometry-to-resize graphics path.
 - `docs/firmware_facts.md`: durable facts and offsets.
 - `docs/amss_service_clues.md`: AMSS AT/USB/CAPI2/debug service string clues.
 - `docs/system_architecture.md`: current firmware architecture map.
@@ -73,6 +74,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `docs/shpapp_widget_events.md`: event-list record matching, replacement order and the unresolved callback/event-source boundary.
 - `docs/shpapp_widget_listener.md`: constructed listener table, handleEvent/direct-call selection and the remaining event-source boundary.
 - `docs/shpapp_event_sources.md`: named-event producers, two dispatch flag groups and unresolved document-receiver identity.
+- `docs/shpapp_event_bridge.md`: incoming-name forwarding and a bounded graphics/geometry update that reaches resize.
 - `docs/rbm_body_encoding.md`: observed body headers, placeholders, and validated mode-0/1 sample expansion.
 - `docs/rbm_mode2_limits.md`: mode-2 framing candidates, counterexamples and image-comparison limits.
 - `docs/imrc_resource_index.md`: verified named-file layout and RBM local indices.

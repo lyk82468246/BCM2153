@@ -107,9 +107,10 @@ Local full reports are `event_sources_verified.ghidra.json`, its console log,
 `event_sources.verification.json`. Candidate searches remain in
 `widget_dispatch_call_candidates.json` and `widget_event_source_candidates.json`.
 
-The next useful questions are the upstream entry for the generic name forwarder
-and construction/identity of its document receiver, or direct callers of the
-resize producer. The evidence does not connect a physical orientation change,
+A subsequent [bridge/geometry probe](shpapp_event_bridge.md) connects an incoming
+name to the generic forwarder and one geometry update to the resize producer.
+Their upstream ownership and construction/identity of the document receiver
+remain unresolved. The evidence does not connect a physical orientation change,
 widget startup or host-supplied custom event to a particular callback body.
 RBM mode 2, global resource IDs and Rsrc2 remain unknown; cellular/baseband paths
 remain excluded.

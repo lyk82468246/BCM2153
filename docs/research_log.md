@@ -774,3 +774,37 @@ document-receiver construction, or callers of the resize producer. Do not equate
 resize with physical orientation or focus/blur with a demonstrated keyboard
 event. Global resource IDs, RBM mode 2, Rsrc2 and default-widget installation
 remain unknown. Cellular/baseband research remains excluded.
+
+## 2026-10-25 Incoming-name bridge and geometry-to-resize connection
+
+Event-source commit c3a309a was pushed and original Git metadata aligned after
+all tracked files matched. Followed the direct caller of the generic name
+forwarder and one of two candidate callers of the resize producer.
+
+Added ProbeShpAppEventBridge.java and
+[shpapp_event_bridge.md](shpapp_event_bridge.md). Constructor 0x0e29257a installs
+table 0x0e58c50c; slot +0x128 points to 0x0e2941ea. That method wraps its incoming
+name argument, obtains a lazily created associated object and reaches the known
+generic event forwarder. Interface ownership, input encoding and concrete names
+remain unknown. Raw RTTI/pointer candidates were not promoted to class ownership.
+
+Function 0x0e28ea42 updates a graphics-region candidate, preserves two geometry
+words, substitutes two incoming words and calls the verified resize producer.
+Adapter 0x0e003062 reaches the saved host context C+0xe4, table slot +0x3bc.
+This connects the geometry path to the established graphics interface; it does
+not equate that interface with WidgetObject's separate resizeWindow receiver.
+No actual dimensions, physical rotation or callback delivery were demonstrated.
+
+Using the supported javac/precompiled-class route, Ghidra 12.1 completed nine
+functions, 248 instructions. Every instruction address matched bounded ARM
+objdump 2.45.50 output; three expected pointer words, physical ELF SHA-256
+44823cc35a80acb383241589c45a2f57b808d40cb7a265fb60a0a941eedc6511 and
+read-only discard were verified. These are ordinary local observations, not
+REA Evidence. Full reports/checks stay in out/rea_shpapp/event_bridge.* and
+candidate searches in event_host_forward_candidates.json. Final compilation and
+whitespace checks passed; no Python implementation changed since 60 tests passed.
+
+Next: upstream object/provider ownership for the name bridge or the geometry
+call at 0x0e28cd78. Document-receiver identity, actual custom widget event names,
+direction provider, RBM mode 2, global resource IDs and Rsrc2 remain unresolved.
+Cellular/baseband paths remain excluded.
