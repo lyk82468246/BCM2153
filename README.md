@@ -95,6 +95,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `docs/shpapp_request_bridge.md`: prefix-selected request providers, request-ID callbacks and byte delivery into transfer slots.
 - `docs/shpapp_transfer_delivery.md`: transfer buffer storage and queue completion/error connected to script-resource acceptance.
 - `docs/shpapp_lower_requests.md`: concrete lower requests and adjusted callback interfaces into the frame's request-ID registry.
+- `docs/shpapp_request_manager.md`: manager submission, pending queue and parameter/callback handoff for acquisition.
 - `docs/rbm_body_encoding.md`: observed body headers, placeholders, and validated mode-0/1 sample expansion.
 - `docs/rbm_mode2_limits.md`: mode-2 framing candidates, counterexamples and image-comparison limits.
 - `docs/imrc_resource_index.md`: verified named-file layout and RBM local indices.

@@ -112,7 +112,9 @@ and `-noanalysis -readOnly`. Final report/console use
 `out/rea_shpapp/lower_requests_retained.*`; bounded independent listing and
 verification use `lower_requests.objdump.txt` and `lower_requests.verification.json`.
 
-Next: manager `0x0e289d62` / submission `0x0e28a892`, concrete data-description
-table and acquisition calls. Package-member access, installation, actual
+The [request-manager follow-up](shpapp_request_manager.md) resolves manager
+submission/pending handling, acquisition's callback structure and the
+data-description pointer/length methods. Next: inline data delivery and
+concrete acquisition callbacks. Package-member access, installation, actual
 scripts/callbacks, transport, host events, menus, orientation, RBM mode 2,
 global IDs and Rsrc2 remain unknown. Cellular/baseband paths remain excluded.

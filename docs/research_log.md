@@ -1267,6 +1267,40 @@ scripts/callbacks, transport, host events, menus, orientation, RBM mode 2,
 global IDs and Rsrc2 remain unknown. Cellular/baseband paths remain excluded.
 Publication uses the temporary clone; original Git metadata remains stale.
 
+## 2026-10-25 Request manager pending queue and acquisition handoff
+
+Continued after pushing efd81d9. Added ProbeShpAppRequestManager.java and
+[shpapp_request_manager.md](shpapp_request_manager.md). Getter 0x0e289d62 lazily
+allocates manager 0x70; constructor initializes pending head/tail and scheduling
+pair. Submit 0x0e28a892 can attempt immediate acquisition or append [request,next]
+when low status byte is 0/0x84. Pending processing saves next, retries acquisition,
+removes successful entries and adjusts scheduling on failure. Raw return 1
+therefore includes queued work. No scheduling units/status enum recovered.
+
+Acquire 0x0e28a4ea has a data branch into unbounded 0x0e28a18e. Other names
+construct 0x38 parameter and 0x30 callback structures and call 0x0e02fbb2 with
+control-associated object, lower request, selected flag and status out. Concrete
+callback targets are guarded, but their semantics and lifetime copying remain
+next. Request byte +0x34 examined values are 0/1; other local-result paths remain
+unresolved. Data-description table getters now resolve H+4 pointer, H+8 length
+and H+0x0c response pointer, connecting lower data preparation to wrapper getters.
+
+Compiled with javac -proc:none and ran Ghidra 12.1 precompiled-class headless
+-process ShpApp_embedded.elf -noanalysis -readOnly with absent absolute JSON.
+All 13 functions decompiled; all 555 instruction addresses, including explicit
+acquisition island after literals, matched bounded ARM objdump 2.45.50. Twenty-one
+words, data literal, physical ELF SHA-256
+44823cc35a80acb383241589c45a2f57b808d40cb7a265fb60a0a941eedc6511
+and read-only discard matched. Reports/console/listing/checks remain under
+out/rea_shpapp/request_manager*. Ordinary local observations, not REA Evidence
+or execution. No Python implementation changed.
+
+Next: inline data 0x0e28a18e, acquisition callbacks 0x0e289050/0x0e289196/
+0x0e2896cc and lower 0x0e02fbb2 contract. Package-member access, installation,
+actual scripts/callbacks, transport, host events, menus, orientation, RBM mode 2,
+global IDs and Rsrc2 remain unknown. Cellular/baseband paths remain excluded.
+Publication uses the temporary clone; original Git metadata remains stale.
+
 ## 2026-10-25 Lower requests and adjusted callbacks share the frame registry
 
 Continued after pushing f2918e4. Added ProbeShpAppLowerRequests.java and
