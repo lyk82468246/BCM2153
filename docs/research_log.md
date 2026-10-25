@@ -1190,3 +1190,42 @@ menus, orientation, RBM mode 2, global IDs and Rsrc2 remain unknown.
 Cellular/baseband paths remain excluded. Publication uses the temporary clone;
 original Git metadata remains stale after the previously recorded approval
 review timeouts.
+
+## 2026-10-25 Request provider prefixes and transfer callback delivery
+
+Continued after pushing b590728. Added ProbeShpAppRequestBridge.java and
+[shpapp_request_bridge.md](shpapp_request_bridge.md). Start 0x0e28b5b6 assigns
+request+0x2c from a counter, converts request text and invokes 0x0e28b3ae.
+Newly bounded string-find establishes prefix matching, not a complete URI
+parser. http/https/data/cid/about:blank share a cached provider; file has an
+additional /User/Br/SavedPage helper predicate and two branches. Constructors
+install concrete provider tables 0x0e58a434 and 0x0e58a3e4. Their acquisition
+bodies and saved-page helper semantics remain unresolved.
+
+Successful nonnull-provider dispatch registers an allocated callback wrapper
+under request ID through 0x0e28b120, a branch to 0x0e28b0ca. Adjacent
+0x0e28b122 is removal, not continuation. Bounded routing routines select the
+wrapper's response/data/completion/error methods. Its table 0x0e58b658 maps
+these to 0x0e28810e/0x0e288314/0x0e2884f8/0x0e2885d0, which reach transfer
+slots +0x68/+0x6c/+0x70/+0x74. Data has forwarding and buffered branches;
+completion can assemble buffered chunks. Incoming provider callbacks and
+actual bytes remain unobserved. Guarded transfer table words identify the
+next concrete bodies 0x0e16d13c/0x0e16d204/0x0e16d258/0x0e16d2aa.
+
+Compiled with javac -proc:none, then Ghidra 12.1 precompiled-class headless
+-process ShpApp_embedded.elf -noanalysis -readOnly with absent absolute report
+paths. Independent comparison exposed unreachable branch 0x0e28841c inside
+a preliminary code island; final probe excludes it and retains explicit
+shared return islands. Final report request_bridge_retained decompiled all
+22 functions; all 1,286 instruction addresses matched bounded ARM objdump
+2.45.50 listings. Seventeen words, seven literals, physical ELF SHA-256
+44823cc35a80acb383241589c45a2f57b808d40cb7a265fb60a0a941eedc6511
+and read-only project discard matched. Reports/console/listings/checks stay
+under out/rea_shpapp/request_bridge*. These are ordinary local observations,
+not REA Evidence or target execution. No Python implementation changed.
+
+Next: transfer/queue delivery to resource acceptance and lower-provider
+acquisition. Package-member access, installation, actual scripts/callbacks,
+transport, host events, menus, orientation, RBM mode 2, global IDs and Rsrc2
+remain unknown. Cellular/baseband paths remain excluded. Publication uses
+the temporary clone; original Git metadata remains stale.

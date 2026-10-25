@@ -141,8 +141,10 @@ and `-noanalysis -readOnly`. Local report, console, bounded listing and
 independent verification are under `out/rea_shpapp/resource_service*`; final
 report/console use `resource_service_provider.*`.
 
-Next: resolve `0x0e28b5b6` / `0x0e28b120` and provider callbacks that supply
-the accepted resource buffer. Transport,
+The [request-bridge follow-up](shpapp_request_bridge.md) resolves prefix-based
+provider selection, request-ID registration and wrapper callbacks into T's
+concrete byte/completion slots. Next: provider acquisition and transfer/queue
+delivery to resource acceptance. Transport,
 package-member acquisition, installation, actual scripts/callbacks, host events,
 menus, orientation, RBM mode 2, global IDs and Rsrc2 remain unknown.
 Cellular/baseband paths remain excluded.
