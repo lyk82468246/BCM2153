@@ -544,3 +544,33 @@ approval timeouts. No further remote push was attempted in this round.
 Next independent native question: the early ShpApp screenshot/bitmap wrapper
 may establish host-created bitmap object layout. Mode-2 framing/pixel identity,
 the indirect host decoder, Rsrc2 and application-wide IDs remain unknown.
+
+## 2026-10-25 ShpApp screenshot descriptor and JPEG path
+
+A focused follow-up expanded native evidence without repeating full ELF analysis.
+The new read-only `ProbeShpAppScreenshot.java` selected Thumb islands
+`0x0e00069a..0x0e000824` and `0x0e000924..0x0e000986`; Ghidra 12.1 completed
+231 instructions and the decompilation. ARM objdump 2.45.50 independently
+corroborates the range. Task-local XDG configuration/cache kept the run outside
+read-only home configuration; project changes were discarded. The report remains
+ordinary Ghidra evidence, not REA Evidence.
+
+The routine calls context `+0xe4`, table `+0x170` to capture a bitmap-like object,
+then reads returned fields `+8`, `+0xc`, `+0x24`, byte `+0x10`, `+0x14`, and
+`+0x18`. It copies them into a nested host descriptor at offsets `+0x1c`, `+0x20`,
+`+0x34`, byte `+0xd`, `+0x00`, and `+0x30`. The same `+8/+0xc` fields were used
+in browser layout arithmetic; this independently supports a dimension-like role,
+without identifying encoded RBM fields or the provider object type.
+
+A second host call at context `+0x20c`, table `+0x14`, is supplied `(8, state,
+&buffer, &length, 5)` and feeds a formatted `/User/Br_ScreenShot/` `%s%05d.jpg`
+path. File create/write/close and cleanup branches are bounded and documented in
+[shpapp_screenshot.md](shpapp_screenshot.md). The selected source string is
+`Src\\SHP\\SFBalDebugShp.c`; quality-like value is 5. This ties the object fields
+to a JPEG screenshot adapter, not to RBM mode-2 decoding.
+
+Parent/ELF hashes remain unchanged. Local report:
+`out/rea_shpapp/screenshot.ghidra.json`, with logs and
+`out/rea_shpapp/screenshot_prefix.objdump.txt`. The mode-2 candidate remains
+unresolved; the next native question is the implementation behind context
+`+0x23c/+0x18` or `+0xe4/+0x18c` resource/bitmap callbacks.

@@ -119,6 +119,11 @@ RBM filename and local-ID candidate; context `+0xe4`, table `+0x18c` receives
 the returned bitmap with graphics handle/coordinates. Their host implementations
 remain unresolved.
 
+The [screenshot pass](shpapp_screenshot.md) independently observes the same
+returned-object `+8/+0xc` fields copied into an image descriptor before a JPEG
+encoder call. It strengthens their dimension-like interpretation while leaving
+the host object type and allocator unresolved.
+
 1. Which loader constructs `C`, and which functions fill these incoming tables?
 2. What are the registration constants and all 20 outgoing methods?
 3. Who invokes the returned dispatcher, with which event values and arguments?
