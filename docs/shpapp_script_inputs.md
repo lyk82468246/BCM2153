@@ -71,8 +71,9 @@ When X+0x10 is clear, a predicate on name_value selects either:
 The registry follow-up corrects the earlier request-name interpretation of
 `0x0e1f9456`: it reads I+0x10, which resolves to `charset`, and can substitute
 a frame-associated default. The incoming name_value is separately passed as
-the second argument to `0x0e15edcc`. I+0x0c reads `src`; the caller connecting
-that getter to name_value is not established by these two probes.
+the second argument to `0x0e15edcc`. I+0x0c reads `src`; the
+[request follow-up](shpapp_script_request.md) resolves the owner getter and
+attribute-update paths into this incoming value.
 
 The text collector starts at `read32(O+0x2c)`, follows each node's +0x18 link,
 and selects nodes through virtual slot +0x58. It obtains selected node values
@@ -114,8 +115,8 @@ with `ProbeShpAppScriptInputs.java` / `.class`, an absent absolute output path,
 and `-noanalysis -readOnly`. Reports, bounded listings and verification remain
 in ignored `out/rea_shpapp/script_inputs.*`.
 
-Next: connect the src getter to the incoming request value and follow package
-member loading. Actual installed-widget execution,
+The request follow-up connects src to the request manager. Next: follow resource
+construction/scheduling and package-member loading. Actual installed-widget execution,
 callback delivery, host event values, native-menu ownership, physical
 orientation, RBM mode 2, global IDs and Rsrc2 remain unknown. Cellular/baseband
 paths remain excluded.

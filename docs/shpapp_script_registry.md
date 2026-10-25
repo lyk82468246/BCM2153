@@ -87,8 +87,9 @@ and `-noanalysis -readOnly`. Final report/console are
 `out/rea_shpapp/script_registry.objdump.txt` and
 `out/rea_shpapp/script_registry.verification.json`. Full output stays local.
 
-Next: follow the src getter's caller into request routing and then the concrete
-resource loader. This probe does not establish a parser invoking the script
+The [request follow-up](shpapp_script_request.md) connects the src getter and
+attribute update to the resource loader. Next: trace resource construction and
+scheduling. This probe does not establish a parser invoking the script
 constructor for any specific package, installation, actual script/callback
 execution or resource transport. Host event values, native-menu ownership,
 physical orientation, RBM mode 2, global resource IDs and Rsrc2 remain unknown.

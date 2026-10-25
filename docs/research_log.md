@@ -1067,3 +1067,41 @@ loading. Installed-widget execution, callback delivery, host event values,
 native menus, physical orientation, RBM mode 2, global IDs and Rsrc2 remain
 unknown. Cellular/baseband paths remain excluded. Publication continues through
 the temporary clone; the original Git index remains stale as previously recorded.
+
+## 2026-10-25 Script src reaches the document resource manager
+
+Continued after pushing 3a02009. Added ProbeShpAppScriptRequest.java and
+[shpapp_script_request.md](shpapp_script_request.md). Owner method 0x0e21b818
+reads src via V+0x230 and forwards it to the existing input router. Attribute
+method 0x0e21b7d0 compares the interned src name and conditionally starts a
+request through 0x0e1f971c. Both methods are referenced by the constructed owner
+table. Newly bounded constructor 0x0e15e6f4 completes the document-owned
+resource loader relation: D+0xd4=R and R+0x38=D. The request wrapper sends
+src/charset independently through class 2 (SCRIPT) into a shared resource
+manager, after name preparation from document-associated fields. Manager
+lookup/construction and per-loader tracking are statically visible; class
+factory, scheduling, actual byte provider and package-member loading remain
+unknown. The dispatcher's seventh manager-call argument X is present on the
+stack but has no established consumption in the bounded manager. No callback
+registration conclusion is inferred from that argument.
+
+Compiled with javac -proc:none; ran Ghidra 12.1 precompiled-class headless
+analysis with -process ShpApp_embedded.elf -noanalysis -readOnly and absent
+absolute reports. Independent comparison caught an undisassembled src adapter
+when it shared one contiguous range with its getter. Made the two entry islands
+explicit, recompiled and reran the final source as script_request_islands.
+All thirteen functions decompiled; all 697 instruction addresses matched
+bounded ARM objdump 2.45.50 listings. Ten expected words, SCRIPT literal,
+physical ELF SHA-256
+44823cc35a80acb383241589c45a2f57b808d40cb7a265fb60a0a941eedc6511
+and read-only project discard matched. Reports, listings and verification stay
+under out/rea_shpapp/script_request*. These are ordinary local observations,
+not REA Evidence or target execution. No Python implementation changed;
+original Java probe compiles and whitespace checks pass.
+
+Next: class-2 resource construction and resource-manager scheduling, then the
+concrete package/resource provider. Actual installed-widget execution, callback
+delivery, transport, host event values, native menus, physical orientation,
+RBM mode 2, global IDs and Rsrc2 remain unknown. Cellular/baseband paths remain
+excluded. Publication still uses the clean temporary clone because original
+Git metadata synchronization previously timed out in automatic approval review.

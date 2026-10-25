@@ -62,6 +62,8 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `tools/ghidra_scripts/ProbeShpAppControlFactory.java`: registered creation entry, named control categories and ownership of geometry/event bridges.
 - `tools/ghidra_scripts/ProbeShpAppControlProvider.java`: provider/frame construction, geometry installation and document receiver storage.
 - `tools/ghidra_scripts/ProbeShpAppDocumentReceiver.java`: loader creation, document installation and constructed event receiver self-link.
+- `tools/ghidra_scripts/ProbeShpAppScriptRegistry.java`: initialized HTML names and concrete script attribute interface slots.
+- `tools/ghidra_scripts/ProbeShpAppScriptRequest.java`: script src routing, document resource-loader ownership and shared request manager.
 - `docs/firmware_facts.md`: durable facts and offsets.
 - `docs/amss_service_clues.md`: AMSS AT/USB/CAPI2/debug service string clues.
 - `docs/system_architecture.md`: current firmware architecture map.
@@ -85,6 +87,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `docs/shpapp_script_context.md`: root execution-state construction, global selection and bounded script-input evaluation entry.
 - `docs/shpapp_script_inputs.md`: document-owned text/request input preparation and loader forwarding to the evaluator.
 - `docs/shpapp_script_registry.md`: initialized script/src/charset/type/language names and their concrete owner interface slots.
+- `docs/shpapp_script_request.md`: src selection/update paths into a document-owned resource loader and shared manager.
 - `docs/rbm_body_encoding.md`: observed body headers, placeholders, and validated mode-0/1 sample expansion.
 - `docs/rbm_mode2_limits.md`: mode-2 framing candidates, counterexamples and image-comparison limits.
 - `docs/imrc_resource_index.md`: verified named-file layout and RBM local indices.
