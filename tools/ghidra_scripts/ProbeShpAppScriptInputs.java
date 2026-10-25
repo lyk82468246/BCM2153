@@ -51,7 +51,7 @@ public class ProbeShpAppScriptInputs extends GhidraScript {
         "probe_script_language_test",
         "probe_script_type_gate",
         "probe_script_input_evaluate",
-        "probe_script_request_name",
+        "probe_script_request_charset",
         "probe_script_request_start",
         "probe_script_input_route",
         "probe_script_request_complete",

@@ -1032,3 +1032,38 @@ Next: owner/request factories and document tag/attribute registry linkage, or
 package member loading. Actual installed-widget execution, callback delivery,
 host event values, native menus, physical orientation, RBM mode 2, global IDs
 and Rsrc2 remain unknown. Cellular/baseband paths remain excluded.
+
+## 2026-10-25 Script tag and attribute registry linkage
+
+Continued after pushing 17d7f39. Added ProbeShpAppScriptRegistry.java and
+[shpapp_script_registry.md](shpapp_script_registry.md). Complete bounded HTML
+name initialization maps script/XHTML to 0x0e5fb3c8, matching the owner
+constructor's registry argument. Attribute initialization maps src/charset/
+type/language to 0x0e5fb72c/0x0e5fb4bc/0x0e5fb760/0x0e5fb58c. Their consumer
+adapters select I+0x0c/+0x10/+0x14/+0x18 respectively. This corrects the prior
+request-name interpretation of 0x0e1f9456: it obtains charset through I+0x10;
+the incoming request name is independently forwarded to 0x0e15edcc. Updated
+the earlier report and original analyst label accordingly. The src getter's
+caller and actual package-member loading remain outside this result.
+
+Compiled with javac -proc:none and ran precompiled classes through Ghidra 12.1
+analyzeHeadless -process ShpApp_embedded.elf -noanalysis -readOnly using absent
+absolute report paths. All eight registry functions decompiled; all 4,491
+instruction addresses matched bounded ARM objdump 2.45.50 listings. Sixteen
+expected words, six ASCII literals, physical ELF SHA-256
+44823cc35a80acb383241589c45a2f57b808d40cb7a265fb60a0a941eedc6511
+and read-only project discard matched. The initializer's 324 qualified-name
+factory calls matched pseudocode and instruction order, with five selected
+calls traced to their concrete destinations. Registry BSS destinations were
+not read as physical file data. Re-ran the relabeled input probe as
+script_inputs_charset.ghidra.json: all seventeen functions decompiled, all 817
+previously checked instructions were unchanged, and hash/words/literals plus
+read-only discard matched. Both original sources compile; whitespace checks pass. Final registry reports, console, verification
+and bounded listings remain under out/rea_shpapp/script_registry*. These are
+ordinary local observations, not REA Evidence or target execution.
+
+Next: trace src selection into the request router, then resource/package member
+loading. Installed-widget execution, callback delivery, host event values,
+native menus, physical orientation, RBM mode 2, global IDs and Rsrc2 remain
+unknown. Cellular/baseband paths remain excluded. Publication continues through
+the temporary clone; the original Git index remains stale as previously recorded.

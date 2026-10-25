@@ -84,6 +84,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `docs/shpapp_script_frame.md`: frame-owned script-global construction and the associated-object lookup used by Widget registration.
 - `docs/shpapp_script_context.md`: root execution-state construction, global selection and bounded script-input evaluation entry.
 - `docs/shpapp_script_inputs.md`: document-owned text/request input preparation and loader forwarding to the evaluator.
+- `docs/shpapp_script_registry.md`: initialized script/src/charset/type/language names and their concrete owner interface slots.
 - `docs/rbm_body_encoding.md`: observed body headers, placeholders, and validated mode-0/1 sample expansion.
 - `docs/rbm_mode2_limits.md`: mode-2 framing candidates, counterexamples and image-comparison limits.
 - `docs/imrc_resource_index.md`: verified named-file layout and RBM local indices.
