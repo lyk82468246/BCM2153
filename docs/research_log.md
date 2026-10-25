@@ -601,3 +601,40 @@ these ranges. Details, boundaries and reproduction command are in
 Next independent question: inspect package metadata and entry paths in the three
 FactoryFs widget packages, without running their content. Full host-table
 providers, mode-2 semantics, global resource IDs and Rsrc2 remain explicit gaps.
+
+## 2026-10-25 FactoryFs default widgets and static entry paths
+
+Graphics commit `3f7ea50` was pushed successfully (`0681be1..3f7ea50 main -> main`).
+The original checkout was aligned only after all tracked file bytes matched the
+publishing checkout; its tracking ref was updated to that confirmed remote head.
+
+Revalidated FactoryFs SHA-256
+`c33b5d69e1376434cefa444e51afd7d5889cfbe6335521678e91433dd2238726`.
+Sleuth Kit 4.12.1 allocated-file reads recovered the three default WGT packages,
+WidgetDefault.ini and two bookmark templates into ignored `out/factoryfs_widgets/`.
+The INI's three names correspond to the indexed package basenames; each manifest
+selects index.html. This does not prove the native installer/path resolution.
+
+Added original `widget_package_probe.py`: fixed packed/member/expanded budgets,
+ZIP member CRC/length checks, manifest namespace/entry validation and static HTML
+reference/event metadata. It extracts and executes nothing. Seven synthetic
+regressions cover CRC corruption, duplicate/traversal names, resource limits,
+manifest failures, external/missing references and HTML base uncertainty.
+All three real packages passed; all 60 repository tests passed with the IMRC
+private sample enabled. Log: `out/factoryfs_widgets/tests_verified.log`.
+`git diff --check` passed. Python 3.14.4; REA JavaScript analyzer provider version 1.
+
+REA analyzed the inert Baidu tree and selected Sina/Qzone sources. Summaries,
+source selections and parent Evidence IDs are recorded in
+[factoryfs_widgets.md](factoryfs_widgets.md); complete local bundle:
+`out/factoryfs_widgets/widgets.rea.evidence.json` (7 records). Baidu parses four
+JS files, Sina five selected files, Qzone two; one Qzone window script has an
+invalid UTF-8 byte at offset 8386 and remains unparsed. Inline/dynamic relations
+and unselected source scopes remain explicit. Ordinary source-byte inspection
+supports the Qzone window prefix observations separately from REA.
+
+The concrete chain now reaches entry handlers and widget window/event/preferences
+API dependencies. No browser was launched, no widget executed, no network endpoint
+contacted. Native binding providers, installer, mount aliases and main-menu
+ownership remain unresolved. Next: use exact default-widget/API-name seeds to
+locate a native consumer, or establish the boundary where this ELF lacks one.

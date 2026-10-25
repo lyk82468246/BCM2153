@@ -37,6 +37,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `tools/amss_at_table_probe.py`: metadata-only probe for AMSS AT command dispatch records.
 - `tools/amss_string_xref_probe.py`: raw multi-base xref probe for selected AMSS service strings.
 - `tools/factoryfs_survey.py`: metadata-only survey for the FactoryFs FAT16 image.
+- `tools/widget_package_probe.py`: bounded ZIP/manifest/entry-HTML checks without extracting or executing widget code.
 - `tools/rbm_body_probe.py`: bounded RBM mode-0/1 sample expansion and explicitly tentative RGB565 previews.
 - `tools/rbm_bank_survey.py`: bounded bank-wide RBM header checks and optional known-mode sample hashes.
 - `tools/rbm_mode2_probe.py`: metadata-only competing mode-2 hypotheses; always unresolved, with no raster export.
@@ -69,6 +70,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `docs/imrc_resource_index.md`: verified named-file layout and RBM local indices.
 - `docs/resource_layer.md`: IMRC/ShpApp/FactoryFs resource observations.
 - `docs/factoryfs_analysis.md`: FAT16 FactoryFs directory and extension map.
+- `docs/factoryfs_widgets.md`: default-widget configuration, validated package boundaries and static startup dependencies.
 - `docs/ghidra_import.md`: reproducible Ghidra headless import workflow.
 - `docs/tktool_tail.md`: Samsung/TkTool trailer observations.
 - `docs/analysis/initial_survey.md`: manually filtered survey summary.

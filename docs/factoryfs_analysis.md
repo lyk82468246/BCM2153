@@ -76,12 +76,12 @@ Most common file suffixes:
 
 ## Interpretation
 
-FactoryFs is not the native executable core. It looks like the persistent file
-layer consumed by the feature-phone application environment: preinstalled J2ME,
-widget packages, browser/IMS/user configuration, certificates, and hardware
-support blobs. Native UI code still appears to live in `ShpApp.app` and packed
-resource databases such as `Rsrc_B5310_China.rc1`.
+The inventory establishes a persistent file layer containing preinstalled J2ME,
+widget packages, user configuration, certificates and hardware-support blobs.
+It does not identify the owner of the entire native UI. The bounded ShpApp
+evidence establishes browser/runtime paths; IMRC supplies indexed resources.
 
-For modification work, FactoryFs is likely the safest first target for adding or
-replacing high-level files, while native string/function changes still require
-understanding ShpApp/IMRC/app payload loaders.
+The [widget follow-up](factoryfs_widgets.md) validates the three WGT package
+boundaries and connects `WidgetDefault.ini` to manifests, entry HTML and selected
+JavaScript host dependencies. Native installation and mount/path resolution
+remain unknown.
