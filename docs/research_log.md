@@ -881,3 +881,47 @@ Next: follow backing area K+0x28 through initialization 0x0e16064a and start
 +0x10 field. Global resource IDs, RBM mode 2, Rsrc2, default-widget installation,
 physical orientation and native-menu ownership remain unknown. Cellular/baseband
 research remains excluded.
+
+## 2026-10-25 Document installation and constructed receiver self-link
+
+Previous round pushed 742986b and left the original checkout clean. Continued
+through backing area K+0x28. Added ProbeShpAppDocumentReceiver.java and
+[shpapp_document_receiver.md](shpapp_document_receiver.md). The loader constructor
+stores W at L+0xb4; its start routine reaches 0x0e163110, which obtains a document
+from type factory 0x0e1ea1d0 and calls setter 0x0e1461a2. That setter consumes an
+incoming pointer word and writes it to read32(W+0x10)+0x464. This resolves the
+previously missing assignment of the registration receiver.
+
+The base document constructor 0x0e1e8de8 writes its own pointer to +0x10 at
+0x0e1e9212 and incoming W to +0xd0. The examined text/html factory route allocates
+0xb68 bytes and reaches this base constructor through 0x0e2094f6/0x0e2093e0.
+A separate application/xhtml+xml route can allocate the 0xad8-byte base object.
+Thus generic named-event dispatch's read32(D+0x10) structurally selects the same
+constructed document as registration's D for these paths. This is not a runtime
+observation or a lifetime invariant for arbitrary setter inputs. Other factory
+subtypes, actual initial type/content, concrete event values and the connection
+between a particular Widget script context and the provider W remain unverified.
+
+Used javac -proc:none against Ghidra jars, then analyzeHeadless with
+-process ShpApp_embedded.elf -noanalysis -readOnly, precompiled
+ProbeShpAppDocumentReceiver.class, and an absent absolute JSON output path.
+After adding three expected derived-table descriptor words, recompiled and ran
+the final source with a fresh destination. Final reports are
+out/rea_shpapp/document_receiver_verified.ghidra.json and its console log;
+bounded objdump listings and checks are document_receiver.objdump.txt and
+document_receiver.verification.json in the same ignored directory.
+All twelve functions decompiled, 1,785 instruction addresses matched independent
+ARM objdump 2.45.50 output, eight words and two literals matched, and read-only
+project changes were discarded. Physical ELF SHA-256 remains
+44823cc35a80acb383241589c45a2f57b808d40cb7a265fb60a0a941eedc6511.
+These are ordinary Ghidra 12.1/objdump observations, not REA Evidence. Explicit
+code islands exclude literal pools and include the base constructor's three-hop
+shared epilogue. Candidate mixed-listing searches remain local and do not
+establish complete call graphs. Source compilation and whitespace checks pass;
+no Python implementation changed since the successful 60-test run.
+
+Next: follow the Widget adapter's script-context frame lookup to establish
+whether it returns the same W as the control provider, or identify host callers
+of the exposed name bridge. Packaged callback execution, default-widget install,
+physical orientation, native-menu ownership, RBM mode 2, global IDs and Rsrc2
+remain unknown. Cellular/baseband research remains excluded.

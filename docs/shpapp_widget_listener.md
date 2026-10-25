@@ -154,9 +154,11 @@ outputs and failed-attempt logs remain ignored in `out/`; validated reports are
 `widget_listener.objdump.txt`, `.provenance.json`, and `.verification.json`.
 
 The subsequent [event-source probe](shpapp_event_sources.md) identifies bounded
-resize/focus/blur and beforeunload producers, with document-receiver identity and
-upstream triggers still unresolved. Exact ASCII searches found neither `widgetmodechange` nor
+resize/focus/blur and beforeunload producers. The later
+[document probe](shpapp_document_receiver.md) resolves the structural receiver
+self-link for the examined construction paths; upstream hardware/host triggers
+remain unresolved. Exact ASCII searches found neither `widgetmodechange` nor
 `widgetendkey` in this ELF; that does not rule out host-supplied or dynamically
-constructed names. Packaged callback execution, receiver/provider construction,
+constructed names. Packaged callback execution, script-context frame identity,
 default-widget installation, RBM mode 2, global resource IDs and Rsrc2 remain
 explicitly unresolved. Cellular/baseband paths remain outside scope.

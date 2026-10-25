@@ -4,7 +4,8 @@ The control's `+0x30` provider constructs the object used by both the native
 name bridge and geometry update. Its `+4` word holds that object, called `W`
 below. Listener registration obtains its document receiver through
 `read32(read32(W+0x10)+0x464)`. The backing constructor clears this field;
-its later assignment and the generic dispatch receiver's identity remain open.
+the subsequent [document probe](shpapp_document_receiver.md) resolves its
+assignment and the receiver self-link for the examined construction paths.
 
 ## Input and verification
 
@@ -78,7 +79,8 @@ The constructor clear is an observed write, not proof that the field stays
 zero through all later helper calls or through the entire initialization path.
 The backing object's subordinate area at `K+0x28` is initialized through
 `0x0e16064a`; `0x0e145884` later forwards this area to `0x0e164626`.
-Their complete effects, including possible document creation, are not covered.
+The subsequent [document probe](shpapp_document_receiver.md) follows this path
+to document creation and assignment.
 
 ## Geometry installation
 
@@ -99,8 +101,10 @@ it does not recover physical dimensions or orientation behavior.
 
 Registration uses `D=read32(K+0x464)`, while generic named-event dispatch uses
 `R=read32(D+0x10)`. This pass resolves `W` construction and the location storing
-`D`; it does not show the assignment of `D` or prove `R==D`. Do not infer delivery
-to a Widget listener from the shared provider alone. Actual custom event names,
+`D`. The subsequent [document probe](shpapp_document_receiver.md) locates the
+assignment and a constructor self-link supporting `R==D` for the examined
+document family. A specific Widget script context's frame and actual callback
+delivery remain unverified. Actual custom event names,
 callback execution, resource IDs, RBM mode 2 and Rsrc2 remain unknown.
 
 Use the [precompiled-class recipe](shpapp_widget_listener.md#reproduce-and-remaining-boundary)
@@ -111,5 +115,5 @@ and `.verification.json`. The literal-reference candidate search in
 `frame_document_field_candidates.json` is bounded to `0x0e145000..0x0e148000`
 within a mixed full listing; it is not a complete writer search or call graph.
 
-Next: follow the `K+0x28` subordinate initialization/start path to document
-construction, then verify its `+0x10` field. Cellular/baseband work stays excluded.
+Next: connect the script-context frame lookup to the provider frame, or recover
+external host use of the name bridge. Cellular/baseband work stays excluded.

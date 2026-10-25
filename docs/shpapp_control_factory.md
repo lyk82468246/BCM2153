@@ -115,9 +115,10 @@ the previously verified incoming-name method `0x0e2941ea`.
 
 The static connection is therefore registered table `+0x34` → created control
 → control slot `+0x20` → bridge slot `+0x128` → generic named-event construction.
-This resolves ownership of the two previously separate native paths. Host code
-that calls these slots, concrete strings it supplies, document-receiver identity,
-and custom widget event delivery remain unknown.
+This resolves ownership of the two previously separate native paths. The later
+[document probe](shpapp_document_receiver.md) resolves the constructed receiver's
+self-link. Host callers, concrete strings and custom widget event delivery
+remain unknown.
 
 ## Reproduce and next boundary
 
@@ -131,8 +132,9 @@ Keep `-noanalysis -readOnly`. Local reports are
 `webcontrol_expose_candidates.json`; they are not complete call graphs.
 
 The subsequent [provider probe](shpapp_control_provider.md) resolves control
-`+0x30` construction and the frame/geometry fields. Document construction and
-how the external host uses the exposed name bridge remain open. A physical
-orientation change, native main-menu
-ownership, RBM mode 2, global IDs and Rsrc2 remain unresolved. Cellular/baseband
+`+0x30` construction and the frame/geometry fields. Document construction,
+assignment and the self-link are followed in the [document probe](shpapp_document_receiver.md).
+How the external host uses the exposed name bridge remains open. A physical
+orientation change, native main-menu ownership, RBM mode 2, global IDs and Rsrc2
+remain unresolved. Cellular/baseband
 paths remain excluded.

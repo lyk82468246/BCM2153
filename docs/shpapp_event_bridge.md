@@ -91,6 +91,9 @@ in `event_host_forward_candidates.json` and are separate from validated ranges.
 
 The subsequent [control-factory probe](shpapp_control_factory.md) resolves the
 owner above the name-forwarding table and the initialization call at `0x0e28cd78`.
-Provider construction and external host use remain open. The event-list receiver identity, custom widget
-event values, window-direction provider, RBM mode 2, global IDs and Rsrc2 remain
+The [provider](shpapp_control_provider.md) and
+[document](shpapp_document_receiver.md) probes then resolve provider/frame
+construction and the document receiver self-link for the examined family.
+Script-context frame identity, external host use, custom widget event values,
+window-direction provider, RBM mode 2, global IDs and Rsrc2 remain
 unknown. Cellular/baseband paths remain excluded.

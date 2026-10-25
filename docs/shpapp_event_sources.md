@@ -73,11 +73,13 @@ event virtual method. Then it calls, in order:
 2. `0x0e1e5d76(R,event,0)` at `0x0e1ee252`.
 
 The caller runs both stored-flag groups. This supports a two-phase interpretation
-without proving all DOM capture/bubbling rules. In particular, `R` is a distinct
-observed expression from the Widget adapter's registration receiver `D` returned
-by `0x0e145634(W)`. Whether `read32(D+0x10)` equals `D` for the relevant document
-object has not been shown. This path cannot yet prove delivery to that widget's
-registered listener list.
+without proving all DOM capture/bubbling rules. `R` is a distinct expression
+from the Widget adapter's registration receiver `D` returned by
+`0x0e145634(W)`. The subsequent [document-construction probe](shpapp_document_receiver.md)
+finds the setter for `D` and a base constructor writing `D+0x10=D`, including
+the examined HTML construction path. This resolves the structural receiver gap
+for those constructed documents. A particular script context's frame, actual
+event values and callback delivery remain unverified.
 
 ## Bounded producers
 
@@ -112,8 +114,9 @@ name to the generic forwarder and one geometry update to the resize producer.
 Their upstream ownership and construction/identity of the document receiver
 were followed through the [control factory](shpapp_control_factory.md) and
 [provider](shpapp_control_provider.md): provider ownership and document pointer
-storage are now resolved, while the document's construction and receiver
-identity remain unresolved. The evidence does not connect a physical orientation change,
+storage are now resolved. The [document probe](shpapp_document_receiver.md) then
+connects construction/assignment and the receiver self-link for the examined
+document family. The evidence does not connect a physical orientation change,
 widget startup or host-supplied custom event to a particular callback body.
 RBM mode 2, global resource IDs and Rsrc2 remain unknown; cellular/baseband paths
 remain excluded.
