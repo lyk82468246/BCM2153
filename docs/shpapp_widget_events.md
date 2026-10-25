@@ -105,8 +105,9 @@ fields; complete timing/reentrancy semantics are unknown.
 The package calls with third argument `false` fit the stored flag and dispatch
 filter. Standard capture/bubbling semantics are plausible but unproven here.
 There is still no demonstrated chain from a hardware event or window orientation
-change to this dispatcher, nor from the listener object into a particular
-JavaScript callback body.
+change to this dispatcher. A subsequent [listener-wrapper probe](shpapp_widget_listener.md)
+resolves the constructed object's slot +8 into handleEvent/direct-call selection
+and a script-call bridge; execution of a particular JavaScript body is unproven.
 
 ## Reproduce and next boundary
 
@@ -130,7 +131,8 @@ Ghidra runs. Full reports stay in `out/rea_shpapp/`: `widget_events.ghidra.json`
 console log, `widget_events.provenance.json`, `event_name_init.objdump.txt` and
 `widget_event_seed.objdump.txt`.
 
-Registration/removal/dispatch mechanics are now partially answered. Remaining
-targets are listener-object table slot `+8`, callers of `0x0e1e5d76`, and the
-separate resize/direction receiver construction. The default-widget installer,
+Registration/removal/dispatch mechanics are now partially answered. The
+[constructed listener slot +8](shpapp_widget_listener.md) has since been resolved.
+Remaining targets are callers of `0x0e1e5d76` and the separate resize/direction
+receiver construction. The default-widget installer,
 global resource IDs, RBM mode 2, Rsrc2 and native-menu ownership remain unknown.

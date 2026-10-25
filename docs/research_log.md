@@ -703,3 +703,40 @@ out/rea_shpapp/direction_name_seeds.json. It does not prove provider absence.
 Next: trace the listener object's implementation from the known wrapper factory,
 or callers of dispatch, before claiming a script callback invocation. Window
 receiver construction remains separate; cellular/baseband paths remain excluded.
+
+## 2026-10-25 Widget listener construction and script-call bridge
+
+Event registry commit 1b4469c was pushed successfully. The original checkout was
+compared byte-for-byte with every tracked publication file before aligning its
+Git metadata. This round followed the known wrapper factory 0x0e27de86.
+
+Added ProbeShpAppWidgetListener.java and
+[shpapp_widget_listener.md](shpapp_widget_listener.md). A newly allocated
+20-byte wrapper stores callback/context at +0xc/+0x10 and uses table 0x0e5a1a24.
+Its +8 slot reaches 0x0e280f08. After several context/host guards, invocation
+selects a callable handleEvent property or tests the saved listener itself,
+converts the native event, and reaches the six-argument bridge at 0x0e0dad48.
+That bridge separates raw kind 1 function-pointer calls from a helper leading
+to 0x0e0fdf7c. No packaged callback body or runtime event delivery was executed.
+
+Ghidra 12.1 completed ten bounded functions, 812 instructions. Every instruction
+address matched independently selected ARM objdump 2.45.50 output. Physical ELF
+SHA-256 remains 44823cc35a80acb383241589c45a2f57b808d40cb7a265fb60a0a941eedc6511;
+read-only project changes were discarded. The last helper explicitly includes
+its shared epilogue island. These are ordinary local-tool observations, not
+REA Evidence; inferred pseudocode signatures do not override register flow.
+
+The Java source loader returned an OSGi error, including outside the sandbox.
+An explicit javac check exposed an incorrect initial getBytes overload, which
+was fixed. Verification then used javac -proc:none and Ghidra's supported
+precompiled-class route; no tool configuration/installation was changed. Exact
+commands are in the new document. Failed-attempt logs, full successful reports,
+physical-hash/instruction checks and supplemental lookup/argument listings stay
+under out/rea_shpapp/widget_listener*. No Python implementation changed since
+the successful 60-test run. Final source compilation and whitespace checks passed.
+
+Exact ASCII searches found zero widgetmodechange/widgetendkey occurrences in
+this ELF; this does not exclude dynamically supplied names. Next: callers of
+the native event path and event production, or the separate window-provider
+construction. Global resource IDs, RBM mode 2, Rsrc2 and default-widget installer
+mapping remain unresolved. Cellular/baseband paths remain excluded.
