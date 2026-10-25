@@ -111,8 +111,9 @@ and `-noanalysis -readOnly`. Local reports are `script_context.ghidra.json`,
 `script_context.console.log`, `script_context.objdump.txt` and
 `script_context.verification.json` under ignored `out/rea_shpapp/`.
 
-Next: trace the script-input producer and its connection to document/package
-loading, or examine external host name-bridge use. Actual packaged execution,
+The [input follow-up](shpapp_script_inputs.md) identifies document-owned text
+and resource-request routes. Next: connect their factories to concrete document
+registry entries or package member loading, or examine host name-bridge use. Actual packaged execution,
 callback delivery, custom host event values, default-widget installation,
 physical orientation, native-menu ownership, RBM mode 2, global IDs and Rsrc2
 remain unknown. Cellular/baseband paths remain excluded.

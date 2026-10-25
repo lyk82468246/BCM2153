@@ -999,3 +999,36 @@ Next: script-input producer/document-loader connection or external host
 name-bridge use. Packaged execution, callback delivery, default-widget install,
 physical orientation, native-menu ownership, RBM mode 2, global IDs and Rsrc2
 remain unknown. Cellular/baseband research remains excluded.
+
+## 2026-10-25 Document-owned script input preparation
+
+Continued after pushing 9b9b28f. Added ProbeShpAppScriptInputs.java and
+[shpapp_script_inputs.md](shpapp_script_inputs.md). Owner constructor
+0x0e21b750 embeds helper X at +0x48, with interface +4 and owner +8. Its
+evaluation gate gets D from owner+0x10 and W from D+0xd0, matching the
+document constructor's frame field. It reaches 0x0e286e46 after type, span,
+marker and frame-settings gates. One route collects selected child-node text
+and constructs an input span; another requests a resource and evaluates a
+cached-input adapter from completion handling. The language helper's literal
+set includes JavaScript versions, livescript, ecmascript and jscript. A
+loader adapter independently forwards input using L+0xb4=W. Concrete tag and
+attribute registry spellings, resource transport, package-member loading and
+actual script execution remain unknown.
+
+Compiled with javac -proc:none and ran the precompiled class through Ghidra
+12.1 analyzeHeadless -process ShpApp_embedded.elf -noanalysis -readOnly with an
+absent absolute JSON destination. All seventeen functions decompiled; all 817
+instruction addresses matched independently bounded ARM objdump 2.45.50 output.
+Seven expected words, six language literals and physical ELF SHA-256
+44823cc35a80acb383241589c45a2f57b808d40cb7a265fb60a0a941eedc6511
+matched; the console confirmed read-only changes were discarded. Reports and
+checks stay in out/rea_shpapp/script_inputs.*. Shared return islands are
+explicit and adjacent literals excluded. These are ordinary local observations,
+not REA Evidence. No Python implementation changed; compilation/whitespace
+checks pass. The original index remains at 31107e4 after the previously
+recorded approval timeouts; publication uses the clean temporary clone.
+
+Next: owner/request factories and document tag/attribute registry linkage, or
+package member loading. Actual installed-widget execution, callback delivery,
+host event values, native menus, physical orientation, RBM mode 2, global IDs
+and Rsrc2 remain unknown. Cellular/baseband paths remain excluded.
