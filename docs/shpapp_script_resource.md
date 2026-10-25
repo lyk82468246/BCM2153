@@ -121,7 +121,9 @@ and `-noanalysis -readOnly`. Final report/console are
 
 The [service follow-up](shpapp_resource_service.md) resolves queue selection,
 transfer construction and the constructed frame-provider dispatch target.
-Next: trace the provider's bridge and calls supplying the accepted buffer.
+The [transfer-delivery follow-up](shpapp_transfer_delivery.md) connects the
+provider wrapper's callbacks through T's buffer and queue completion to this
+resource's acceptance/error methods. Lower-provider acquisition remains next.
 Package-member acquisition, installation,
 actual script/callback execution, transport, host event values, menus,
 orientation, RBM mode 2, global IDs and Rsrc2 remain unknown. Cellular/baseband

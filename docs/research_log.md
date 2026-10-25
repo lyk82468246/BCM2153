@@ -1229,3 +1229,40 @@ acquisition. Package-member access, installation, actual scripts/callbacks,
 transport, host events, menus, orientation, RBM mode 2, global IDs and Rsrc2
 remain unknown. Cellular/baseband paths remain excluded. Publication uses
 the temporary clone; original Git metadata remains stale.
+
+## 2026-10-25 Transfer buffer and queue completion to script-resource input
+
+Continued after pushing aaff0a5. Added ProbeShpAppTransferDelivery.java and
+[shpapp_transfer_delivery.md](shpapp_transfer_delivery.md). Transfer slots
++0x68/+0x6c/+0x70/+0x74 reach concrete queue slots +0x10/+0x14/+0x18/+0x1c.
+Base-data calls T+0x58, resolved to 0x0e16c792, passing the final stack flag.
+Base construction clears T+0x170 and sets byte T+0x17d=1. Final flagged data
+creates a 32-byte buffer whose pointer/length fields are +0x18/+0x1c; another
+path creates/appends other storage under allocation/mode gates. T+0x5c getter
+0x0e16c844 returns the retained T+0x170 reference on its available-buffer path.
+
+Queue completion 0x0e16a99a removes the tracked job, obtains T+0x5c and calls
+resource +0x14 with flag 1 at 0x0e16aa3e. Class-2 table word selects previously
+verified 0x0e15e388, linking delivered bytes through buffer acceptance and
+client notification to cached script input statically. Queue error adapter
+0x0e16aa7c calls common removal 0x0e16a368 with flag zero, reaching resource
++0x18 / 0x0e15e3da. Resource error, transfer lifecycle and allocation gates
+remain explicit. Data-only paths depend on initially zero job bytes +0x18/19;
+multipart response handling can change +0x19. Actual provider invocation and
+byte acquisition were not observed; no script or package was executed.
+
+Compiled with javac -proc:none and ran Ghidra 12.1 precompiled-class headless
+-process ShpApp_embedded.elf -noanalysis -readOnly with an absent absolute JSON
+path. All 23 functions decompiled; all 1,055 instruction addresses, including
+three shared epilogues, matched bounded ARM objdump 2.45.50. Sixteen words,
+two multipart literal locations, physical ELF SHA-256
+44823cc35a80acb383241589c45a2f57b808d40cb7a265fb60a0a941eedc6511
+and read-only project discard matched. Reports/console/listings/verification
+remain under out/rea_shpapp/transfer_delivery*. These are ordinary local
+observations, not REA Evidence. No Python implementation changed.
+
+Next: concrete lower-provider acquisition and callback routing from
+0x0e28b326 / 0x0e28b8da. Package-member access, installation, actual
+scripts/callbacks, transport, host events, menus, orientation, RBM mode 2,
+global IDs and Rsrc2 remain unknown. Cellular/baseband paths remain excluded.
+Publication uses the temporary clone; original Git metadata remains stale.

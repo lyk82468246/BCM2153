@@ -119,8 +119,9 @@ The already verified T table `0x0e5ac3b4` resolves these slots:
 | +0x70 | `0x0e16d259` | `0x0e16d258` |
 | +0x74 | `0x0e16d2ab` | `0x0e16d2aa` |
 
-These table words are guarded here; their bodies and the queue's calls into
-resource acceptance are the next bounded analysis.
+These table words are guarded here. The
+[transfer-delivery follow-up](shpapp_transfer_delivery.md) bounds their bodies,
+buffer storage/getter and queue calls into class-2 resource acceptance/error.
 
 ## Reproduce and limits
 
