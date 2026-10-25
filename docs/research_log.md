@@ -959,3 +959,43 @@ Next: follow script evaluation/context setup or external host name-bridge use.
 Host event values, callback execution, default-widget installation, physical
 orientation, native-menu ownership, RBM mode 2, global IDs and Rsrc2 remain
 unknown. Cellular/baseband paths remain excluded.
+
+## 2026-10-25 Root execution state and script-input evaluation entry
+
+Continued after pushing 80a357a. Original-checkout Git metadata synchronization
+was not executed: automatic approval review timed out twice. The publishing
+clone remained clean and tracked files matched the original byte-for-byte at
+publication; the original index still describes 31107e4. Continued research
+without depending on that metadata update.
+
+Added ProbeShpAppScriptContext.java and
+[shpapp_script_context.md](shpapp_script_context.md). Global initializer
+0x0e0e43ac constructs N with N+0=0, N+4=Q, N+8=shared state and N+0x0c=C;
+installs N at S+0x20; initializes E=S+0x64 with read32(E-0x38)=N. The five-byte
+writer crosses into an explicitly ARM copy helper, independently checked as
+ARM rather than forced Thumb. Q table slot +0xb8 resolves to 0x0e27f14a,
+which returns E through 0x0e0e289c. Thus the constructed root state selects Q
+through the existing selector's equality branch. Other states and mutations
+remain unresolved. Script-input entry 0x0e286e46 obtains that state and reaches
+0x0e0dbc70, then preparation/engine helpers 0x0e344758/0x0e0fde3c. Input
+production, engine contracts and actual package execution remain unknown.
+
+Compiled with javac -proc:none; ran the precompiled class using
+analyzeHeadless -process ShpApp_embedded.elf -noanalysis -readOnly with an
+absent absolute JSON destination. All fourteen functions decompiled and all
+725 instruction addresses matched bounded ARM objdump 2.45.50 output. Used
+-M force-thumb for thirteen functions and -m armv5t for the one ARM helper;
+this decoding choice does not establish the CPU model. Eight words and the
+physical ELF SHA-256
+44823cc35a80acb383241589c45a2f57b808d40cb7a265fb60a0a941eedc6511
+matched, and Ghidra 12.1 discarded read-only project changes. Full reports and
+checks remain in out/rea_shpapp/script_context*. These are ordinary local
+observations, not REA Evidence. Opaque callee signatures caused pseudocode
+branch elimination; assembly preserves the unresolved error/exception paths
+and fifth stack argument omitted at one bridge call. No Python implementation
+changed; source compilation and whitespace checks pass.
+
+Next: script-input producer/document-loader connection or external host
+name-bridge use. Packaged execution, callback delivery, default-widget install,
+physical orientation, native-menu ownership, RBM mode 2, global IDs and Rsrc2
+remain unknown. Cellular/baseband research remains excluded.

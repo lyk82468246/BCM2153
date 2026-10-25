@@ -102,8 +102,9 @@ listener list addressed by native named-event dispatch.
 to the last node and returns its +4 word. The selector invokes this root
 object's virtual slot +0xb8. If the result equals exec, it returns the root;
 otherwise it returns `read32(read32(read32(exec-0x38)+8)+0x4c4)`.
-The construction above does not identify the concrete exec, initialize all
-these context-node fields, or prove that the alternate branch selects this Q.
+The [context follow-up](shpapp_script_context.md) verifies root-state
+initialization and selection of this Q for that constructed state. Other
+execution states and the alternate branch remain outside that result.
 
 ## Reproduction and next boundary
 
@@ -113,7 +114,8 @@ and `-noanalysis -readOnly`. Final local outputs are
 `script_frame_verified.ghidra.json`, `script_frame_verified.console.log`,
 `script_frame.objdump.txt` and `script_frame.verification.json`.
 
-Next: trace actual script evaluation/context setup or host use of the exposed
+The [context follow-up](shpapp_script_context.md) reaches a script-input
+evaluation entry. Next: trace its input producer or host use of the exposed
 name bridge. Concrete host event values, packaged callback execution,
 default-widget installation, physical orientation, native-menu ownership,
 RBM mode 2, global IDs and Rsrc2 remain unknown. Cellular/baseband research
