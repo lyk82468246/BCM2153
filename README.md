@@ -81,6 +81,7 @@ See [docs/publication_policy.md](docs/publication_policy.md).
 - `docs/shpapp_control_factory.md`: outgoing factory slot, Browser/Widget/Messenger category byte and exposed event-name bridge.
 - `docs/shpapp_control_provider.md`: provider ownership, frame backing fields and the remaining document-construction boundary.
 - `docs/shpapp_document_receiver.md`: document creation/assignment and structural identity of registration/dispatch receivers.
+- `docs/shpapp_script_frame.md`: frame-owned script-global construction and the associated-object lookup used by Widget registration.
 - `docs/rbm_body_encoding.md`: observed body headers, placeholders, and validated mode-0/1 sample expansion.
 - `docs/rbm_mode2_limits.md`: mode-2 framing candidates, counterexamples and image-comparison limits.
 - `docs/imrc_resource_index.md`: verified named-file layout and RBM local indices.

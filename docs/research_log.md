@@ -925,3 +925,37 @@ whether it returns the same W as the control provider, or identify host callers
 of the exposed name bridge. Packaged callback execution, default-widget install,
 physical orientation, native-menu ownership, RBM mode 2, global IDs and Rsrc2
 remain unknown. Cellular/baseband research remains excluded.
+
+## 2026-10-25 Script-global construction and frame lookup
+
+Continued from pushed 31107e4 with a clean checkout. Added the original
+ProbeShpAppScriptFrame.java and [shpapp_script_frame.md](shpapp_script_frame.md).
+The provider frame's backing constructor initializes embedded script state
+J=K+0x468 with J+0x28=W. Its gated lazy initialization obtains A through the
+same 0x0e1459f2 getter as the native name bridge, constructs wrapper C and
+global Q, and stores C at J+0x0c. Global construction installs A at S+0x1b4,
+Q+0x18=S+4, and C+0x18=Q. Associated constructor 0x0e13ffb8 stores W at A+0x44.
+Thus Widget registration's 0x0e339a88(Q) lookup recovers the same A/W for this
+constructed Q. Actual execution-context selection remains unresolved: the
+selector 0x0e323488 has both a root-node path and an alternate +0x4c4 field path.
+This is construction evidence, not observed delivery to a packaged widget.
+
+Compiled with javac -proc:none against installed Ghidra jars; ran
+analyzeHeadless -process ShpApp_embedded.elf -noanalysis -readOnly using the
+precompiled class and absent absolute report destinations. After adding the
+backing-base constructor and pointer-retain helper, recompiled and ran the
+final source as script_frame_verified.ghidra.json. All twenty functions
+decompiled; all 647 instruction addresses matched independent bounded ARM
+objdump 2.45.50 listings. Fifteen words and physical ELF SHA-256
+44823cc35a80acb383241589c45a2f57b808d40cb7a265fb60a0a941eedc6511
+matched, and Ghidra 12.1 confirmed read-only changes were discarded. Final
+console, listings and verification remain in out/rea_shpapp/script_frame*.
+These are ordinary local observations, not REA Evidence. Inferred void/64-bit
+return signatures do not override register/stack pointer flow. No Python
+implementation changed since the successful 60-test run; compilation and
+whitespace checks pass.
+
+Next: follow script evaluation/context setup or external host name-bridge use.
+Host event values, callback execution, default-widget installation, physical
+orientation, native-menu ownership, RBM mode 2, global IDs and Rsrc2 remain
+unknown. Cellular/baseband paths remain excluded.

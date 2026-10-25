@@ -108,9 +108,9 @@ Consequently, for the examined constructed documents:
 `generic dispatch R = read32(D+0x10) = D`.
 
 The [named-event source report](shpapp_event_sources.md)'s two flag groups can
-therefore address that same document's listener list. A particular Widget
-script context's `W` still needs to be connected to the provider's `W` before
-claiming delivery to a packaged widget. Gating, actual incoming names and
+therefore address that same document's listener list. The subsequent [script-frame probe](shpapp_script_frame.md) connects the
+provider frame to its constructed script global. Actual context selection
+still needs verification before claiming delivery to a packaged widget. Gating, actual incoming names and
 callback execution remain separate unresolved questions.
 
 ## Reproduction and next boundary
@@ -123,8 +123,9 @@ and `-noanalysis -readOnly`. Final local outputs are
 Candidate searches in `document_*_candidates.json` are mixed-listing seeds,
 not complete writer searches or call graphs.
 
-Next: connect the Widget adapter's script-context frame lookup to the constructed
-provider frame, or resolve the external host's name-bridge use. Real custom event
+The [script-frame follow-up](shpapp_script_frame.md) resolves that construction
+relationship. Next: identify concrete script context selection or resolve the
+external host's name-bridge use. Real custom event
 values, default-widget installation, physical orientation, native-menu ownership,
 RBM mode 2, global resource IDs and Rsrc2 remain unknown. Cellular/baseband
 research remains excluded.
