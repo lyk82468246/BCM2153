@@ -92,9 +92,10 @@ After control-associated gates it calls:
 The selected flag is 0 or 1, depending on control fields and a text comparison.
 If the returned handle differs from -1, acquire invokes L virtual +0x10 with
 that handle. It then releases parameter strings, P and C, and returns whether
-the handle differs from -1. Whether the callee copies structures, invokes
-callbacks synchronously or retains any pointers remains unknown. No transport
-ABI or safe lifetime reconstruction follows merely from these calls.
+the handle differs from -1. The [lower follow-up](shpapp_acquisition_backend.md)
+proves all callback pointers are copied into an allocated entity and selected
+parameter fields are duplicated. Callback timing and complete reachable-pointer
+ownership remain unknown; no safe host ABI follows merely from these calls.
 
 The [callback follow-up](shpapp_acquisition_callbacks.md) resolves
 `0x0e28944a`, `0x0e289050`, `0x0e289196`, `0x0e2896cc` and the inline
@@ -121,8 +122,9 @@ remain under `out/rea_shpapp/request_manager*`.
 
 The [acquisition callback follow-up](shpapp_acquisition_callbacks.md) bounds
 the header/data/error and inline `data:` paths. It shows local
-header parsing, bounded callback handoff and `data:` conversion, while leaving
-the lower helper `0x0e02fbb2`, callback timing and provider return values
-unresolved. Package-member access, installation, actual scripts/callbacks,
-transport, host events, menus, orientation, RBM mode 2, global IDs and Rsrc2
+header parsing, bounded callback handoff and `data:` conversion. The
+[lower follow-up](shpapp_acquisition_backend.md) resolves parameter cloning,
+callback copying and entity registration. Actual dispatch consumption, external
+callback timing and byte acquisition remain unresolved. Package-member access,
+installation, actual scripts/callbacks, transport, host events, menus, orientation, RBM mode 2, global IDs and Rsrc2
 remain unknown. Cellular/baseband paths remain excluded.

@@ -132,9 +132,11 @@ verification use `acquisition_callbacks.objdump.txt` and
 `acquisition_callbacks.verification.json`. The source embeds only analyst
 ranges, short literals and expected words; full pseudocode stays in `out/`.
 
-Next: bound `0x0e02fbb2` across its literal pools to identify the acquisition
-handoff beneath the manager. Callback-table copying, external callback timing,
-parameter ownership, actual byte acquisition and transport remain unknown.
+The [lower-acquisition follow-up](shpapp_acquisition_backend.md) bounds
+`0x0e02fbb2` and proves all 12 callback pointers are copied into a registered
+entity. Next: the entity dispatch/consumption behind `0x0e024184`,
+`0x0e02a500` and `0x0e009a18`. External callback timing, parameter ownership,
+actual byte acquisition and transport remain unknown.
 FactoryFs member access, widget installation, script execution, host events,
 menus, orientation, RBM mode 2, global resource IDs and Rsrc2 remain unresolved.
 Cellular, AMSS, RF, SIM and baseband paths remain excluded.

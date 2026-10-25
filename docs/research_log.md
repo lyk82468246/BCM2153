@@ -1378,3 +1378,42 @@ menus, orientation, RBM mode 2, global IDs and Rsrc2 remain unknown. Cellular,
 AMSS, RF, SIM and baseband paths remain excluded. The missing temporary
 publishing clone was restored as /tmp/bcm2153-publish-20261025/repo and remote
 main rechecked at b29a7e8. Original Git metadata remains stale.
+
+## 2026-10-25 Lower acquisition copies callbacks into registered entities
+
+Continued after pushing 09993c1. Added ProbeShpAppAcquisitionBackend.java and
+[shpapp_acquisition_backend.md](shpapp_acquisition_backend.md). Lower handoff
+0x0e02fbb2 allocates Q size 0x38, duplicates selected fields, conditionally
+copies the body, and calls 0x0e029acc. That helper allocates E size 0x78,
+copies all twelve callback words C+0..0x2c to E+0x28..0x54, stores L at
+E+0x58 and Q at E+0x0c, assigns a sequence ID and inserts the node into a
+sorting-key-ordered queue. This resolves C-address retention for this path;
+full reachable-pointer ownership remains unknown. Cleanup frees selected Q
+fields, so conditional shallow pointers must not be assumed safe to reuse.
+
+Client lookup bounds indices below 5. Unavailable client writes 0x85; failed
+entity registration writes 0x84, explaining a source of manager retry status.
+Assertions return 0 if their helper returns, while positive ID means registered
+work, not completed I/O. The two file:// predicates compare Q+0 and original
+P+0 respectively through a host-adapter table +0x58; actual comparison behavior
+is still indirect. The nonzero dispatch branch reaches 0x0e024184 then
+0x0e009a18 or 0x0e02a500. The zero branch enters 0x0e009a18 with raw message
+value 3. Those bodies remain next; no filesystem/network/package was accessed.
+
+Compiled with javac -proc:none; ran Ghidra 12.1 precompiled-class headless
+-process ShpApp_embedded.elf -noanalysis -readOnly with an absent absolute JSON
+path. All seven functions decompiled, all 547 instruction addresses matched
+independent arm-none-eabi-objdump 2.45.50 force-thumb listings, four initialized
+words and two file:// literal locations matched physical bytes. ELF SHA-256
+44823cc35a80acb383241589c45a2f57b808d40cb7a265fb60a0a941eedc6511
+and read-only discard matched. Final report/console are
+out/rea_shpapp/acquisition_backend_checked.*; local verifier/listing/result use
+acquisition_backend names. Three explicit code islands exclude acquisition
+literal pools. These are ordinary local observations, not REA Evidence; no
+Python implementation changed. Publication uses the temporary clone.
+
+Next: bound 0x0e024184, 0x0e02a500 and message delivery behind 0x0e009a18,
+then follow copied entity callbacks toward actual acquisition. FactoryFs
+package members, installation, script execution, transport, host events,
+menus, orientation, RBM mode 2, global IDs and Rsrc2 remain unresolved.
+Cellular, AMSS, RF, SIM and baseband research remain excluded.
