@@ -104,8 +104,9 @@ helper has not been shown to preserve identical predicate results.
 - Zero predicate: E+0x15=2 and
   `0x0e009a18(0,3,0,0,id,0)`.
 
-Those callees are outside the stable probe. Names, `file://` and raw dispatch
-values alone do not establish a filesystem read, network access or FactoryFs
+The [dispatch follow-up](shpapp_acquisition_dispatch.md) bounds cache
+selection/response preparation, client-state gates and message construction.
+These calls do not establish a filesystem read, network access or FactoryFs
 package-member acquisition. The positive ID is an entity-registration result;
 calling it a completed transfer would overstate the evidence.
 
@@ -119,9 +120,10 @@ bounded listing use `acquisition_backend.verification.json` and
 `acquisition_backend.objdump.txt`; earlier six-function candidate reports are
 superseded.
 
-Next: `0x0e024184`, `0x0e02a500` and message queuing/consumption through
-`0x0e009a18`, to connect an entity's actual data acquisition with its copied
-callback slots. Parameter ownership, host comparison implementation, external
+The [dispatch follow-up](shpapp_acquisition_dispatch.md) resolves
+`0x0e024184`, `0x0e02a500` and message queuing through `0x0e009a18`, plus
+saved error callback invocation after entity cleanup. Next: message consumption
+and cache body delivery into copied callback slots. Parameter ownership, host comparison implementation, external
 callback timing and concrete package/transport remain unresolved. Widget
 installation, script execution, host events, menus, orientation, RBM mode 2,
 global IDs and Rsrc2 remain unknown. Cellular/baseband paths remain excluded.

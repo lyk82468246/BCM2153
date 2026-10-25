@@ -1417,3 +1417,47 @@ then follow copied entity callbacks toward actual acquisition. FactoryFs
 package members, installation, script execution, transport, host events,
 menus, orientation, RBM mode 2, global IDs and Rsrc2 remain unresolved.
 Cellular, AMSS, RF, SIM and baseband research remain excluded.
+
+## 2026-10-25 Acquisition cache gates and queued follow-up messages
+
+Continued after pushing efc46bb. Added ProbeShpAppAcquisitionDispatch.java and
+[shpapp_acquisition_dispatch.md](shpapp_acquisition_dispatch.md). The apparent
+file branch 0x0e024184 gets client+0x2c cache configuration, selects a cache,
+allocates an 8-byte handle and calls 0x0e022c58. Record lookup/preparation can
+build a 0x20-byte response at E+0x10 with copied header pointer/length at +4/+8.
+Short cache log/source literals corroborate the interpretation; backing store
+and resource-body acquisition remain unknown. Allocation checks and raw mode
+returns are recorded without treating the routines as a safe public API.
+
+Dispatch gate 0x0e02a500 tests opaque client-state helpers, entering
+0x0e029ef4, queuing raw event 5 with 0x20, or changing client state. Existing
+backend events 2/3 and this event 5 enter 0x0e009a18 with owner 0 and entity ID
+as argument 5. The helper allocates a 0x20-byte message, stores owner/event and
+fields, inserts by ordering class and signals through 0x0e0015f2. Message
+construction is not delivery. Error path 0x0e02a588 saves callback/client/id/L,
+removes E through 0x0e02a2dc and then invokes copied C+8 unless saved state is
+0x11. This connects entity teardown to the already bounded error adapter.
+
+Compiled with javac -proc:none and ran Ghidra 12.1 precompiled-class headless
+-process ShpApp_embedded.elf -noanalysis -readOnly with absent absolute JSON.
+All 12 bounded functions decompiled and all 727 instruction addresses matched
+independent arm-none-eabi-objdump 2.45.50 force-thumb listings. Five initialized
+words, three literal locations, physical ELF SHA-256
+44823cc35a80acb383241589c45a2f57b808d40cb7a265fb60a0a941eedc6511
+and read-only discard matched. Final report/console are local
+out/rea_shpapp/acquisition_dispatch_checked.*; listing, verifier and result
+remain under acquisition_dispatch names. These are ordinary local observations,
+not REA Evidence; no target execution or Python implementation change.
+
+Next: owner-0 event consumption/registration and cache payload delivery. Local
+candidate inspection found registration 0x0e00a160 and request handler
+0x0e02cc28; they are not yet stable probes. Backing store, actual byte
+acquisition, FactoryFs package members, installation, script execution,
+transport, host events, menus, orientation, RBM mode 2, global IDs and Rsrc2
+remain unknown. Cellular, AMSS, RF, SIM and baseband paths remain excluded.
+Publication continues through the temporary clone; original Git metadata stays
+unchanged.
+
+Paused at user request after this verified round; owner-0 message consumption
+and cache-body delivery remain pending. Publish only the completed probe and
+notes; do not resume research until requested.
